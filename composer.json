@@ -1,0 +1,26 @@
+{
+    "name": "erwan/learn-php",
+    "description": "a simple learning-php env",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "Migrations\\": "migrations/"
+        },
+        "files": [
+            "src/Tools/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "waner1er",
+            "email": "riveterwan8@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6",
+        "fakerphp/faker": "^1.24",
+        "illuminate/view": "^11.0",
+        "illuminate/events": "^11.0",
+        "illuminate/filesystem": "^11.0"
+    }
+}

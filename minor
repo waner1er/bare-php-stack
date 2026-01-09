@@ -1,0 +1,9 @@
+<?php
+#!/usr/bin/env php
+require __DIR__ . '/vendor/autoload.php';
+
+
+use App\Cli\MinorCli;
+
+$cli = new MinorCli();
+$cli->run($argv);
