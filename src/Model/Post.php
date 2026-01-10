@@ -1,20 +1,21 @@
 <?php
-        
+
 declare(strict_types=1);
-        
+
 namespace App\Model;
-        
+
 use App\Model\Model;
-        
+
 class Post extends Model
 {
     protected static string $table = 'posts';
     protected static string $primaryKey = 'id';
-        
+
     public int $id;
     public string $title;
     public string $slug;
     public string $content;
+    public int $user_id;
 
     public function __construct(array $data = [])
     {
@@ -65,5 +66,19 @@ class Post extends Model
         $this->content = $content;
     }
 
+    public function getUserId(): int
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(int $user_id): void
+    {
+        $this->user_id = $user_id;
+    }
+
+    public function user(): ?User
+    {
+        $userData = User::find($this->user_id);
+        return $userData ? new User($userData) : null;
+    }
 }
-        

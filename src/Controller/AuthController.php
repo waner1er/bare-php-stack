@@ -6,7 +6,8 @@ namespace App\Controller;
 
 use App\Tools\Auth;
 use App\Tools\Session;
-use App\Tools\BladeInstance;
+use App\Middleware\AuthMiddleware;
+use App\Middleware\CsrfMiddleware;
 use App\Attribute\Route;
 
 class AuthController extends BaseController
@@ -14,10 +15,7 @@ class AuthController extends BaseController
     #[Route('/login', 'GET')]
     public function showLogin(): void
     {
-        if (Auth::check()) {
-            header('Location: /');
-            exit;
-        }
+        AuthMiddleware::guest();
 
         $this->render('auth.login', [
             'error' => Session::getFlash('error'),
@@ -27,6 +25,9 @@ class AuthController extends BaseController
     #[Route('/login', 'POST')]
     public function login(): void
     {
+        AuthMiddleware::guest();
+        CsrfMiddleware::handle();
+
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
 
@@ -37,7 +38,9 @@ class AuthController extends BaseController
         }
 
         if (Auth::attempt($email, $password)) {
-            header('Location: /');
+            // Redirige vers l'URL prévue ou la page d'accueil
+            $redirectTo = AuthMiddleware::getIntendedUrl('/');
+            header('Location: ' . $redirectTo);
             exit;
         }
 
@@ -48,19 +51,19 @@ class AuthController extends BaseController
     #[Route('/register', 'GET')]
     public function showRegister(): void
     {
-        if (Auth::check()) {
-            header('Location: /');
-            exit;
-        }
+        AuthMiddleware::guest();
 
         $this->render('auth.register', [
             'error' => Session::getFlash('error'),
         ]);
     }
-    #[Route('/register', 'POST')]
 
+    #[Route('/register', 'POST')]
     public function register(): void
     {
+        AuthMiddleware::guest();
+        CsrfMiddleware::handle();
+
         $firstName = $_POST['first_name'] ?? '';
         $lastName = $_POST['last_name'] ?? '';
         $email = $_POST['email'] ?? '';
@@ -93,10 +96,12 @@ class AuthController extends BaseController
         Session::flash('error', 'Cet email est déjà utilisé');
         header('Location: /register');
     }
-    #[Route('/logout', 'GET')]
 
+    #[Route('/logout', 'GET')]
     public function logout(): void
     {
+        AuthMiddleware::handle();
+
         Auth::logout();
         header('Location: /login');
     }

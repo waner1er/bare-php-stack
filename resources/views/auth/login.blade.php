@@ -9,6 +9,7 @@
         @endif
 
         <form method="POST" action="/login">
+            {!! csrf_field() !!}
             <div style="margin-bottom: 15px;">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" required style="width: 100%; padding: 8px;">
