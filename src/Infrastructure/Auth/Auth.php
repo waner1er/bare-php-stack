@@ -21,16 +21,13 @@ class Auth
             return false;
         }
 
-        // Vérifier le mot de passe
         if (!password_verify($password, $userData['password'])) {
             return false;
         }
 
-        // Stocker l'utilisateur en session
         Session::set('user_id', $userData['id']);
         Session::set('user_email', $userData['email']);
 
-        // Régénérer le session_id pour protection contre session fixation
         Session::regenerate();
 
         return true;
@@ -66,14 +63,12 @@ class Auth
     {
         $pdo = Database::getConnection();
 
-        // Vérifier si l'email existe déjà
         $stmt = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
         $stmt->execute(['email' => $email]);
         if ($stmt->fetch()) {
-            return false; // Email déjà utilisé
+            return false;
         }
 
-        // Créer l'utilisateur
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare('INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)');
         $result = $stmt->execute([$firstName, $lastName, $email, $hashedPassword]);
@@ -83,7 +78,6 @@ class Auth
             Session::set('user_id', $userId);
             Session::set('user_email', $email);
 
-            // Régénérer le session_id pour protection contre session fixation
             Session::regenerate();
         }
 

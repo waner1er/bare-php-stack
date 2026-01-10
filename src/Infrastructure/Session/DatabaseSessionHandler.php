@@ -49,10 +49,12 @@ class DatabaseSessionHandler implements SessionHandlerInterface
         $ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? null;
 
-        // Récupérer l'user_id depuis les données de session si disponible
         $sessionData = [];
-        if ($data) {
-            $sessionData = @unserialize($data) ?: [];
+        if ($data && is_string($data) && preg_match('/^([aOs]):/', $data)) {
+            $tmp = @unserialize($data);
+            if ($tmp !== false && is_array($tmp)) {
+                $sessionData = $tmp;
+            }
         }
         $userId = $sessionData['user_id'] ?? null;
 

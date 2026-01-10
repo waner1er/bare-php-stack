@@ -3,9 +3,11 @@
 // Seeder: Post
 // Génère des données pour la table 'posts'
 
+use PDO;
 use Faker\Factory;
-use App\Tools\Database;
-use App\Tools\StringHelper;
+use App\Infrastructure\Database\Database;
+use App\Infrastructure\Utils\StringHelper;
+
 
 return function () {
     $faker = Factory::create();

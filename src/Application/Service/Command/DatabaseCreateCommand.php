@@ -4,23 +4,32 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Command;
 
-use App\Application\Service\Command\CommandInterface;
+use App\Application\Service\Command\Interface\CommandInterface;
+
+use App\Application\Service\Command\Interface\OutputInterface;
 
 class DatabaseCreateCommand implements CommandInterface
 {
+    private OutputInterface $output;
+    private array $env;
+
+    public function __construct(OutputInterface $output, array $env)
+    {
+        $this->output = $output;
+        $this->env = $env;
+    }
+
     public function execute(?string $name, array $options = []): void
     {
         try {
-            $env = $this->loadEnv();
-
-            $host = $env['DB_HOST'] ?? 'localhost';
-            $dbName = $env['DB_NAME'] ?? '';
-            $user = $env['DB_USER'] ?? '';
-            $pass = $env['DB_PASS'] ?? '';
+            $host = $this->env['DB_HOST'] ?? 'localhost';
+            $dbName = $this->env['DB_NAME'] ?? '';
+            $user = $this->env['DB_USER'] ?? '';
+            $pass = $this->env['DB_PASS'] ?? '';
 
             if (empty($dbName)) {
-                echo "Erreur: DB_NAME n'est pas défini dans .env\n";
-                exit(1);
+                $this->output->writeln("Erreur: DB_NAME n'est pas défini dans .env");
+                return;
             }
 
             $dsn = "mysql:host={$host};charset=utf8mb4";
@@ -32,33 +41,16 @@ class DatabaseCreateCommand implements CommandInterface
             $exists = $stmt->fetch();
 
             if ($exists) {
-                echo "La base de données '{$dbName}' existe déjà.\n";
+                $this->output->writeln("La base de données '{$dbName}' existe déjà.");
                 return;
             }
 
             $sql = "CREATE DATABASE `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
             $pdo->exec($sql);
 
-            echo "Base de données '{$dbName}' créée avec succès.\n";
+            $this->output->writeln("Base de données '{$dbName}' créée avec succès.");
         } catch (\PDOException $e) {
-            echo "Erreur lors de la création de la base de données : " . $e->getMessage() . "\n";
-            exit(1);
+            $this->output->writeln("Erreur lors de la création de la base de données : " . $e->getMessage());
         }
-    }
-
-    private function loadEnv(): array
-    {
-        $envPath = ENV_FILE;
-        if (!file_exists($envPath)) {
-            throw new \RuntimeException('.env file not found');
-        }
-        $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $env = [];
-        foreach ($lines as $line) {
-            if (strpos(trim($line), '#') === 0) continue;
-            [$key, $value] = explode('=', $line, 2);
-            $env[trim($key)] = trim($value);
-        }
-        return $env;
     }
 }

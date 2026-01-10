@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Command;
 
-use App\Application\Service\Command\CommandInterface;
+use App\Application\Service\Command\Interface\CommandInterface;
 
 class MakeControllerCommand implements CommandInterface
 {
-    public function execute(?string $name): void
+    public function execute(?string $name, array $options = []): void
     {
         if (!$name) {
             echo "Usage: minor make:controller NomDuController\n";
@@ -28,9 +28,10 @@ class MakeControllerCommand implements CommandInterface
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Presentation\Controller;
 
-use App\Attribute\Route;
+use App\Presentation\Attribute\Route;
+use App\Presentation\Controller\BaseController;
 
 class $className extends BaseController
 {
@@ -39,6 +40,6 @@ class $className extends BaseController
 PHP;
 
         file_put_contents($filePath, $template);
-        echo "Controller $className créé dans src/Controller.\n";
+        echo "Controller $className créé dans " . PRESENTATION_PATH . "/Controller.\n";
     }
 }

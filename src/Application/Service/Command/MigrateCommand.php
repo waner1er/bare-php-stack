@@ -4,11 +4,20 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Command;
 
-use App\Application\Service\Command\CommandInterface;
+use PDO;
 use App\Infrastructure\Database\Database;
+use App\Application\Service\Command\Interface\OutputInterface;
+use App\Application\Service\Command\Interface\CommandInterface;
 
 class MigrateCommand implements CommandInterface
 {
+    private OutputInterface $output;
+
+    public function __construct(OutputInterface $output)
+    {
+        $this->output = $output;
+    }
+
     public function execute(?string $name, array $options = []): void
     {
         try {
@@ -21,7 +30,7 @@ class MigrateCommand implements CommandInterface
             $migrationFiles = glob($migrationsDir . '/*.php');
 
             if (empty($migrationFiles)) {
-                echo "Aucune migration à exécuter.\n";
+                $this->output->writeln("Aucune migration à exécuter.");
                 return;
             }
 
@@ -48,28 +57,27 @@ class MigrateCommand implements CommandInterface
             }
 
             if (empty($newMigrations)) {
-                echo "Aucune nouvelle migration à exécuter.\n";
-                echo "Toutes les migrations sont à jour.\n";
+                $this->output->writeln("Aucune nouvelle migration à exécuter.");
+                $this->output->writeln("Toutes les migrations sont à jour.");
                 return;
             }
 
             // Exécuter les nouvelles migrations
             $executed = 0;
             foreach ($newMigrations as $migration) {
-                echo "Migration: {$migration['file']}... ";
+                $this->output->writeln("Migration: {$migration['file']}... ");
                 $pdo->exec($migration['sql']);
 
                 // Enregistrer la migration comme exécutée
                 $this->recordMigration($pdo, $migration['file']);
 
-                echo "✓\n";
+                $this->output->writeln("✓");
                 $executed++;
             }
 
-            echo "\nMigration terminée. {$executed} nouvelle(s) migration(s) exécutée(s).\n";
+            $this->output->writeln("\nMigration terminée. {$executed} nouvelle(s) migration(s) exécutée(s).");
         } catch (\Exception $e) {
-            echo "Erreur lors de la migration : " . $e->getMessage() . "\n";
-            exit(1);
+            $this->output->writeln("Erreur lors de la migration : " . $e->getMessage());
         }
     }
 

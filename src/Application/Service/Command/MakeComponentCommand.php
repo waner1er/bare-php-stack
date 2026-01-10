@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Command;
 
-use App\Application\Service\Command\CommandInterface;
+use App\Application\Service\Command\Interface\CommandInterface;
 
 class MakeComponentCommand implements CommandInterface
 {
@@ -44,10 +44,10 @@ BLADE;
         $content = str_replace('{componentName}', $componentName, $template);
 
         file_put_contents($filePath, $content);
-        echo "✓ Composant Blade '{$componentName}' créé dans resources/views/components/\n";
+        echo "✓ Composant Blade '{$componentName}' créé dans Presentation/View/components/\n";
 
         if ($createClass) {
-            $componentClassDir = VIEW_PATH . '/components';
+            $componentClassDir = PRESENTATION_PATH . '/Component';
             $componentClassPath = $componentClassDir . "/{$className}.php";
 
             if (!is_dir($componentClassDir)) {
@@ -64,7 +64,7 @@ BLADE;
 
 namespace App\Component;
 
-use App\Infrastructure\Blade;
+use App\Infrastructure\Blade\Blade;
 
 class {$className}
 {
@@ -88,7 +88,7 @@ class {$className}
 PHP;
 
             file_put_contents($componentClassPath, $classTemplate);
-            echo "✓ Classe Component\\{$className} créée dans src/Component/\n";
+            echo "✓ Classe Component\\{$className} créée dans " . PRESENTATION_PATH . "/Component/\n";
         }
     }
 }
