@@ -12,6 +12,7 @@ use App\Tools\Session;
 use App\Router\Router;
 use App\Controller\PostController;
 use App\Controller\AuthController;
+use App\Controller\BackOfficeController;
 
 Session::start();
 
@@ -24,6 +25,7 @@ if (isset($_ENV['APP_DEBUG']) && $_ENV['APP_DEBUG'] === 'true') {
 $router = new Router();
 $router->registerController(PostController::class);
 $router->registerController(AuthController::class);
+$router->registerController(BackOfficeController::class);
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];

@@ -9,6 +9,7 @@
         @endif
 
         <form method="POST" action="/register">
+            {!! csrf_field() !!}
             <div style="margin-bottom: 15px;">
                 <label for="first_name">Prénom</label>
                 <input type="text" name="first_name" id="first_name" required style="width: 100%; padding: 8px;">

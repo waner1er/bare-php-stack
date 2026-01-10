@@ -1,16 +1,16 @@
 <?php
-        
+
 declare(strict_types=1);
-        
+
 namespace App\Model;
-        
+
 use App\Model\Model;
-        
+
 class User extends Model
 {
     protected static string $table = 'users';
     protected static string $primaryKey = 'id';
-        
+
     public int $id;
     public string $first_name;
     public string $last_name;
@@ -76,5 +76,8 @@ class User extends Model
         $this->password = $password;
     }
 
+    public function getFullName(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 }
-        

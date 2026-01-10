@@ -12,6 +12,9 @@ class MigrateCommand implements CommandInterface
         try {
             $pdo = Database::getConnection();
 
+            // Créer la table migrations si elle n'existe pas
+            $this->ensureMigrationsTable($pdo);
+
             $migrationsDir = __DIR__ . '/../../../migrations/files';
             $migrationFiles = glob($migrationsDir . '/*.php');
 
@@ -20,29 +23,72 @@ class MigrateCommand implements CommandInterface
                 return;
             }
 
-            // Collecter toutes les requêtes SQL
-            $sqlQueries = [];
+            // Récupérer les migrations déjà exécutées
+            $executedMigrations = $this->getExecutedMigrations($pdo);
+
+            // Collecter les nouvelles migrations
+            $newMigrations = [];
             foreach ($migrationFiles as $file) {
+                $fileName = basename($file);
+
+                // Ignorer si déjà exécutée
+                if (in_array($fileName, $executedMigrations, true)) {
+                    continue;
+                }
+
                 $sql = require $file;
                 if (is_string($sql) && !empty($sql)) {
-                    $sqlQueries[] = [
-                        'file' => basename($file),
+                    $newMigrations[] = [
+                        'file' => $fileName,
                         'sql' => $sql
                     ];
                 }
             }
 
-            // Exécuter toutes les requêtes
-            foreach ($sqlQueries as $query) {
-                echo "Migration: {$query['file']}... ";
-                $pdo->exec($query['sql']);
-                echo "✓\n";
+            if (empty($newMigrations)) {
+                echo "Aucune nouvelle migration à exécuter.\n";
+                echo "Toutes les migrations sont à jour.\n";
+                return;
             }
 
-            echo "\nMigration terminée. " . count($sqlQueries) . " table(s) créée(s).\n";
+            // Exécuter les nouvelles migrations
+            $executed = 0;
+            foreach ($newMigrations as $migration) {
+                echo "Migration: {$migration['file']}... ";
+                $pdo->exec($migration['sql']);
+
+                // Enregistrer la migration comme exécutée
+                $this->recordMigration($pdo, $migration['file']);
+
+                echo "✓\n";
+                $executed++;
+            }
+
+            echo "\nMigration terminée. {$executed} nouvelle(s) migration(s) exécutée(s).\n";
         } catch (\Exception $e) {
             echo "Erreur lors de la migration : " . $e->getMessage() . "\n";
             exit(1);
         }
+    }
+
+    private function ensureMigrationsTable(\PDO $pdo): void
+    {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS migrations (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            migration VARCHAR(255) NOT NULL UNIQUE,
+            executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    }
+
+    private function getExecutedMigrations(\PDO $pdo): array
+    {
+        $stmt = $pdo->query("SELECT migration FROM migrations");
+        return $stmt ? $stmt->fetchAll(\PDO::FETCH_COLUMN) : [];
+    }
+
+    private function recordMigration(\PDO $pdo, string $migrationName): void
+    {
+        $stmt = $pdo->prepare("INSERT INTO migrations (migration) VALUES (?)");
+        $stmt->execute([$migrationName]);
     }
 }
