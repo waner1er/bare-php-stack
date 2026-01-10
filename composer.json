@@ -7,7 +7,7 @@
             "Migrations\\": "migrations/"
         },
         "files": [
-            "src/Tools/helpers.php"
+            "src/Infrastructure/Utils/helpers.php"
         ]
     },
     "authors": [
