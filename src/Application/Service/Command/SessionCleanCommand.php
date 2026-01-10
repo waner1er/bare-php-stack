@@ -4,10 +4,19 @@ namespace App\Application\Service\Command;
 
 use App\Infrastructure\Database\Database;
 use App\Infrastructure\Session\DatabaseSessionHandler;
-use App\Application\Service\Command\CommandInterface;
+use App\Application\Service\Command\Interface\CommandInterface;
+
+use App\Application\Service\Command\Interface\OutputInterface;
 
 class SessionCleanCommand implements CommandInterface
 {
+    private OutputInterface $output;
+
+    public function __construct(OutputInterface $output)
+    {
+        $this->output = $output;
+    }
+
     public function getName(): string
     {
         return 'session:clean';
@@ -18,7 +27,7 @@ class SessionCleanCommand implements CommandInterface
         return 'Nettoie les sessions expirées de la base de données';
     }
 
-    public function execute(?string $name): void
+    public function execute(?string $name, array $options = []): void
     {
         $pdo = Database::getConnection();
         $lifetime = (int) ($_ENV['SESSION_LIFETIME'] ?? 7200);
@@ -27,9 +36,9 @@ class SessionCleanCommand implements CommandInterface
         $count = $handler->clean();
 
         if ($count > 0) {
-            echo "✓ {$count} session(s) expirée(s) supprimée(s)\n";
+            $this->output->writeln("✓ {$count} session(s) expirée(s) supprimée(s)");
         } else {
-            echo "✓ Aucune session expirée à nettoyer\n";
+            $this->output->writeln("✓ Aucune session expirée à nettoyer");
         }
     }
 }

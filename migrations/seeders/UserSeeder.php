@@ -4,7 +4,7 @@
 // Génère des données pour la table 'users'
 
 use Faker\Factory;
-use App\Tools\Database;
+use App\Infrastructure\Database\Database;
 
 return function () {
     $faker = Factory::create();

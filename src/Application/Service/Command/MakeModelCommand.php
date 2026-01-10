@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Command;
 
-use App\Application\Service\Command\CommandInterface;
+use App\Application\Service\Command\Interface\CommandInterface;
+
+use App\Application\Service\Command\Interface\OutputInterface;
 
 class MakeModelCommand implements CommandInterface
 {
+    private OutputInterface $output;
+
+    public function __construct(OutputInterface $output)
+    {
+        $this->output = $output;
+    }
+
     public function execute(?string $name, array $options = []): void
     {
         if (!$name) {
-            echo "Usage: minor make:model ModelName [--migration]\n";
-            exit(1);
+            $this->output->writeln("Usage: minor make:model ModelName [--migration]");
+            return;
         }
 
         $createMigration = in_array('--migration', $options);
@@ -21,11 +30,11 @@ class MakeModelCommand implements CommandInterface
         $filePath = DOMAIN_PATH . "/Entity/{$className}.php";
 
         if (file_exists($filePath)) {
-            echo "Le model $className existe déjà.\n";
-            exit(1);
+            $this->output->writeln("Le model $className existe déjà.");
+            return;
         }
 
-        echo "Nom de la table (par défaut: " . strtolower($className) . "s): ";
+        $this->output->writeln("Nom de la table (par défaut: " . strtolower($className) . "s): ");
         $tableName = trim(fgets(STDIN));
         if (empty($tableName)) {
             $tableName = strtolower($className) . 's';
@@ -36,7 +45,7 @@ class MakeModelCommand implements CommandInterface
         $primaryKey = 'id';
         $foreignKeys = [];
 
-        echo "Entrez les propriétés supplémentaires (appuyez sur Entrée sans rien saisir pour terminer):\n";
+        $this->output->writeln("Entrez les propriétés supplémentaires (appuyez sur Entrée sans rien saisir pour terminer):");
 
         while (true) {
             echo "Nom de la propriété: ";

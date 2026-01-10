@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Command;
 
-use App\Application\Service\Command\CommandInterface;
+use App\Application\Service\Command\Interface\CommandInterface;
+
+use App\Application\Service\Command\Interface\OutputInterface;
 
 class MakeSeederCommand implements CommandInterface
 {
+    private OutputInterface $output;
+
+    public function __construct(OutputInterface $output)
+    {
+        $this->output = $output;
+    }
+
     public function execute(?string $name, array $options = []): void
     {
         if (!$name) {
-            echo "Usage: minor make:seeder ModelName\n";
-            exit(1);
+            $this->output->writeln("Usage: minor make:seeder ModelName");
+            return;
         }
 
         $modelName = ucfirst($name);
@@ -28,14 +37,14 @@ class MakeSeederCommand implements CommandInterface
         }
 
         if (file_exists($filePath)) {
-            echo "Le seeder {$seederName} existe déjà.\n";
-            exit(1);
+            $this->output->writeln("Le seeder {$seederName} existe déjà.");
+            return;
         }
 
         // Vérifier si le modèle existe
         if (!file_exists($modelPath)) {
-            echo "Le modèle {$modelName} n'existe pas.\n";
-            exit(1);
+            $this->output->writeln("Le modèle {$modelName} n'existe pas.");
+            return;
         }
 
         // Analyser le modèle pour extraire les propriétés

@@ -4,20 +4,26 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Command;
 
-use App\Application\Service\Command\CommandInterface;
+use App\Application\Service\Command\Interface\CommandInterface;
 
+use App\Application\Service\Command\Interface\OutputInterface;
 
 class SeedCommand implements CommandInterface
 {
-    // Définir l'ordre d'exécution des seeders
+    private OutputInterface $output;
     private array $seederOrder = [
         'UserSeeder.php',
         'PostSeeder.php',
     ];
 
+    public function __construct(OutputInterface $output)
+    {
+        $this->output = $output;
+    }
+
     public function execute(?string $name, array $options = []): void
     {
-        echo "Exécution des seeders...\n\n";
+        $this->output->writeln("Exécution des seeders...\n");
 
         try {
             $seedersDir = MIGRATIONS_PATH . '/seeders';
@@ -25,10 +31,10 @@ class SeedCommand implements CommandInterface
             if (isset($options['class'])) {
                 $seederFile = $seedersDir . '/' . $options['class'] . '.php';
                 if (!file_exists($seederFile)) {
-                    echo "Seeder " . $options['class'] . " introuvable.\n";
+                    $this->output->writeln("Seeder " . $options['class'] . " introuvable.");
                     return;
                 }
-                echo "Seeder: " . $options['class'] . "\n";
+                $this->output->writeln("Seeder: " . $options['class']);
                 $seeder = require $seederFile;
                 if (is_callable($seeder)) {
                     $seeder();
@@ -36,7 +42,7 @@ class SeedCommand implements CommandInterface
             } else {
                 $seederFiles = glob($seedersDir . '/*.php');
                 if (empty($seederFiles)) {
-                    echo "Aucun seeder à exécuter.\n";
+                    $this->output->writeln("Aucun seeder à exécuter.");
                     return;
                 }
 
@@ -44,7 +50,7 @@ class SeedCommand implements CommandInterface
                 $orderedFiles = $this->orderSeeders($seederFiles);
 
                 foreach ($orderedFiles as $file) {
-                    echo "Seeder: " . basename($file) . "\n";
+                    $this->output->writeln("Seeder: " . basename($file));
                     $seeder = require $file;
                     if (is_callable($seeder)) {
                         $seeder();
@@ -52,10 +58,9 @@ class SeedCommand implements CommandInterface
                 }
             }
 
-            echo "\n✓ Seeding terminé avec succès.\n";
+            $this->output->writeln("\n✓ Seeding terminé avec succès.");
         } catch (\Exception $e) {
-            echo "Erreur lors du seeding : " . $e->getMessage() . "\n";
-            exit(1);
+            $this->output->writeln("Erreur lors du seeding : " . $e->getMessage());
         }
     }
 
