@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Presentation\Interface;
+namespace App\Interface\FrontEnd\Component;
 
 interface ComponentInterface
 {

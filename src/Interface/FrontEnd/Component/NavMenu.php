@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Presentation\Component;
+namespace App\Interface\FrontEnd\Component;
 
 use App\Infrastructure\Auth\Auth;
 use App\Infrastructure\Blade\Blade;

@@ -25,12 +25,11 @@ define('LOGS_PATH', STORAGE_PATH . '/logs');
 define('DOMAIN_PATH', SRC_PATH . '/Domain');
 define('APPLICATION_PATH', SRC_PATH . '/Application');
 define('INFRASTRUCTURE_PATH', SRC_PATH . '/Infrastructure');
-define('PRESENTATION_PATH', SRC_PATH . '/Presentation');
+define('INTERFACE_PATH', SRC_PATH . '/Interface');
 
 // Chemins spécifiques
-define('VIEW_PATH', PRESENTATION_PATH . '/View');
-define('CONTROLLER_PATH', PRESENTATION_PATH . '/Controller');
-
+define('VIEW_PATH', INTERFACE_PATH . '/View');
+define('CONTROLLER_PATH', INTERFACE_PATH . '/Controller');
 // Base de données et migrations
 define('MIGRATIONS_PATH', ROOT_PATH . '/migrations');
 define('SEEDERS_PATH', MIGRATIONS_PATH . '/seeders');

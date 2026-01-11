@@ -10,17 +10,40 @@ class MakeComponentCommand implements CommandInterface
 {
     public function execute(?string $name, array $options = []): void
     {
-        if (!$name) {
-            echo "Usage: minor make:component ComponentName [--class]\n";
-            exit(1);
+        // Demande du nom du composant si non fourni
+        if (empty($name)) {
+            echo "Entrez le nom du composant : ";
+            $name = trim(fgets(STDIN));
+            if (empty($name)) {
+                echo "Le nom du composant ne peut pas être vide.\n";
+                exit(1);
+            }
         }
 
-        $createClass = in_array('--class', $options);
+        // Lecture dynamique des dossiers d'interface
+        $interfacePath = defined('INTERFACE_PATH') ? INTERFACE_PATH : __DIR__ . '/../../../Interface';
+        $dirs = array_filter(scandir($interfacePath), function ($d) use ($interfacePath) {
+            return $d[0] !== '.' && is_dir($interfacePath . '/' . $d) && strtolower($d) !== 'common';
+        });
+        $dirs = array_values($dirs);
+        echo "Choisissez l'interface cible :\n";
+        foreach ($dirs as $i => $dir) {
+            $num = $i + 1;
+            echo "  [$num] $dir\n";
+        }
+        echo "Votre choix : ";
+        $choice = trim(fgets(STDIN));
+        $choiceIndex = (int)$choice - 1;
+        if (!is_numeric($choice) || !isset($dirs[$choiceIndex])) {
+            echo "Choix invalide.\n";
+            exit(1);
+        }
+        $selectedType = $dirs[$choiceIndex];
 
         $componentName = strtolower($name);
         $className = ucfirst($name);
 
-        $componentsDir = VIEW_PATH . '/components';
+        $componentsDir = INTERFACE_PATH . "/$selectedType/View/components";
         $filePath = $componentsDir . "/{$componentName}.blade.php";
 
         if (!is_dir($componentsDir)) {
@@ -28,7 +51,7 @@ class MakeComponentCommand implements CommandInterface
         }
 
         if (file_exists($filePath)) {
-            echo "Le composant {$componentName} existe déjà.\n";
+            echo "Le composant {$componentName} existe déjà dans $selectedType.\n";
             exit(1);
         }
 
@@ -40,29 +63,36 @@ class MakeComponentCommand implements CommandInterface
 </div>
 
 BLADE;
-
         $content = str_replace('{componentName}', $componentName, $template);
 
         file_put_contents($filePath, $content);
-        echo "✓ Composant Blade '{$componentName}' créé dans Presentation/View/components/\n";
+        echo "✓ Composant Blade '{$componentName}' créé dans Interface/$selectedType/View/components/\n";
 
-        if ($createClass) {
-            $componentClassDir = PRESENTATION_PATH . '/Component';
-            $componentClassPath = $componentClassDir . "/{$className}.php";
-
-            if (!is_dir($componentClassDir)) {
-                mkdir($componentClassDir, 0755, true);
+        // Demander si l'utilisateur veut générer une classe
+        if (!in_array('--class', $options)) {
+            echo "Voulez-vous générer une classe pour ce composant ? (o/n) : ";
+            $generateClass = strtolower(trim(fgets(STDIN)));
+            if ($generateClass !== 'o' && $generateClass !== 'oui' && $generateClass !== 'y' && $generateClass !== 'yes') {
+                exit(0);
             }
+        }
 
-            if (file_exists($componentClassPath)) {
-                echo "⚠ La classe Component\\{$className} existe déjà.\n";
-                return;
-            }
+        $componentClassDir = INTERFACE_PATH . "/$selectedType/Component";
+        $componentClassPath = $componentClassDir . "/{$className}.php";
 
-            $classTemplate = <<<PHP
+        if (!is_dir($componentClassDir)) {
+            mkdir($componentClassDir, 0755, true);
+        }
+
+        if (file_exists($componentClassPath)) {
+            echo "⚠ La classe Component\\{$className} existe déjà dans $selectedType.\n";
+            exit(1);
+        }
+
+        $classTemplate = <<<PHP
 <?php
 
-namespace App\Component;
+namespace App\Interface\$selectedType\Component;
 
 use App\Infrastructure\Blade\Blade;
 
@@ -75,7 +105,7 @@ class {$className}
 
     public function render(): string
     {
-        \$views = VIEW_PATH;
+        \$views = INTERFACE_PATH . "/$selectedType/View";
         \$cache = CACHE_PATH;
         \$blade = new Blade(\$views, \$cache);
         
@@ -86,9 +116,8 @@ class {$className}
 }
 
 PHP;
-
-            file_put_contents($componentClassPath, $classTemplate);
-            echo "✓ Classe Component\\{$className} créée dans " . PRESENTATION_PATH . "/Component/\n";
-        }
+        file_put_contents($componentClassPath, $classTemplate);
+        echo "✓ Classe Component\\{$className} créée dans Interface/$selectedType/Component/\n";
+        exit(0);
     }
 }

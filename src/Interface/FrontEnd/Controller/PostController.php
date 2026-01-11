@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Presentation\Controller;
+namespace App\Interface\FrontEnd\Controller;
 
-use App\Presentation\Attribute\Route;
 use App\Domain\Entity\Post;
 use App\Domain\Entity\User;
+use App\Interface\Common\BaseController;
+use App\Interface\Common\Attribute\Route;
 
 class PostController extends BaseController
 {
