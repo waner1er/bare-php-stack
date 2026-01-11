@@ -19,9 +19,14 @@ class MakeModelCommand implements CommandInterface
 
     public function execute(?string $name, array $options = []): void
     {
-        if (!$name) {
-            $this->output->writeln("Usage: minor make:model ModelName [--migration]");
-            return;
+        // Demander le nom du modèle si non fourni
+        if (empty($name)) {
+            echo "Entrez le nom du modèle : ";
+            $name = trim(fgets(STDIN));
+            if (empty($name)) {
+                echo "Le nom du modèle ne peut pas être vide.\n";
+                exit(1);
+            }
         }
 
         $createMigration = in_array('--migration', $options);
@@ -187,6 +192,14 @@ PHP;
 
         file_put_contents($filePath, $template);
         echo "Modèle $className créé dans src/Domain/Entity.\n";
+
+        if (!$createMigration) {
+            echo "Voulez-vous générer une migration pour ce modèle ? (o/n) : ";
+            $generateMigration = strtolower(trim(fgets(STDIN)));
+            if ($generateMigration === 'o' || $generateMigration === 'oui' || $generateMigration === 'y' || $generateMigration === 'yes') {
+                $createMigration = true;
+            }
+        }
 
         if ($createMigration) {
             $this->createMigration($className, $tableName, $properties, $foreignKeys);

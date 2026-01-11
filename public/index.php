@@ -9,11 +9,11 @@ $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
 use App\Infrastructure\Utils\Debug;
-use App\Infrastructure\Session\Session;
 use App\Infrastructure\Router\Router;
-use App\Presentation\Controller\PostController;
-use App\Presentation\Controller\AuthController;
-use App\Presentation\Controller\BackOfficeController;
+use App\Infrastructure\Session\Session;
+use App\Interface\FrontEnd\Controller\AuthController;
+use App\Interface\FrontEnd\Controller\PostController;
+use App\Interface\Admin\Controller\BackOfficeController;
 
 Session::start();
 

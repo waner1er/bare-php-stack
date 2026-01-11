@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Presentation\Attribute;
+namespace App\Interface\Common\Attribute;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class Route

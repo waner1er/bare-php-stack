@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Presentation\Controller;
+namespace App\Interface\FrontEnd\Controller;
 
 use App\Infrastructure\Auth\Auth;
-use App\Presentation\Attribute\Route;
 use App\Infrastructure\Session\Session;
+use App\Interface\Common\BaseController;
+use App\Interface\Common\Attribute\Route;
 use App\Infrastructure\Middleware\AuthMiddleware;
 use App\Infrastructure\Middleware\CsrfMiddleware;
 

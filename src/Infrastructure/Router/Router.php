@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Router;
 
-use App\Presentation\Attribute\Route;
+use App\Interface\Common\Attribute\Route;
 use ReflectionClass;
 use ReflectionMethod;
 
