@@ -15,28 +15,21 @@ class PostController extends BaseController
     #[Route('/posts', 'GET', 'posts.index')]
     public function index(): void
     {
-        $postsData = Post::all();
-        $posts = array_map(fn($row) => new Post($row), $postsData);
-        $this->render('posts/index', ['posts' => $posts]);
+        $posts = Post::all();
+        $this->render('posts.index', ['posts' => $posts]);
     }
 
-    #[Route('/posts/{id}', 'GET', 'posts.show')]
-    public function show(int $id): void
+    #[Route('/posts/{slug}', 'GET', 'posts.show')]
+    public function show(string $slug): void
     {
-        $row = Post::find($id);
-        if ($row) {
-            $post = new Post($row);
-            $this->render('posts/show', ['post' => $post]);
-        } else {
+        $post = Post::findBySlug($slug);
+
+        if (!$post) {
             http_response_code(404);
-            echo "Post not found.";
+            echo "Post non trouvé.";
+            return;
         }
-    }
 
-    #[Route('/', 'GET', 'home')]
-    public function home(): void
-    {
-        $users = User::all();
-        $this->render('home', ['users' => $users]);
+        $this->render('posts.show', ['post' => $post]);
     }
 }

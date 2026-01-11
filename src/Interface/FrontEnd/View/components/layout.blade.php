@@ -1,5 +1,8 @@
 @php
     use App\Infrastructure\Auth\Auth;
+    use App\Interface\FrontEnd\Component\NavMenu;
+
+    $navMenu = new NavMenu();
 @endphp
 <!DOCTYPE html>
 <html lang="fr">
@@ -12,7 +15,7 @@
 <body>
     <header>
         <h1>Mon Blog</h1>
-        @include('components.navmenu', ['isAuthenticated' => Auth::check(), 'user' => Auth::user()])
+        {!! $navMenu->render() !!}
     </header>
     <main>
         {{ $slot }}

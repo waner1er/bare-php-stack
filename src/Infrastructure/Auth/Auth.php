@@ -33,7 +33,7 @@ class Auth
         return true;
     }
 
-    public static function user(): ?array
+    public static function user(): ?User
     {
         if (!self::check()) {
             return null;
