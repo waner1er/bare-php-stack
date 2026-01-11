@@ -16,6 +16,7 @@ class User extends Model
     public string $last_name;
     public string $email;
     public string $password;
+    public string $role = 'user';
 
     public function __construct(array $data = [])
     {
@@ -74,6 +75,21 @@ class User extends Model
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 
     public function getFullName(): string

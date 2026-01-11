@@ -12,22 +12,25 @@ return function () {
 
     $count = 20;
 
-    // default admin user
-    $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
+    // Créer l'utilisateur admin
+    $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([
         'admin',
         'admin',
         'admin@admin.com',
-        password_hash('password', PASSWORD_DEFAULT) // Mot de passe hashé
+        password_hash('password', PASSWORD_DEFAULT),
+        'admin' // Rôle admin
     ]);
 
+    // Créer les utilisateurs normaux
     for ($i = 0; $i < $count; $i++) {
-        $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([
             $faker->firstName(),
             $faker->lastName(),
             $faker->email(),
-            password_hash('password', PASSWORD_DEFAULT) // Mot de passe hashé
+            password_hash('password', PASSWORD_DEFAULT),
+            'user' // Rôle user
         ]);
     }
 

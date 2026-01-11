@@ -4,34 +4,55 @@ namespace App\Domain\Abstract;
 
 use App\Infrastructure\Database\Database;
 
-
-
 abstract class Model
 {
     protected static string $table;
     protected static string $primaryKey = 'id';
 
-    public static function all(): array
+    /**
+     * Retourne la connexion PDO (accessible publiquement pour les requêtes personnalisées)
+     */
+    public static function db(): \PDO
     {
-        $pdo = Database::getConnection();
-        $stmt = $pdo->query('SELECT * FROM ' . static::$table);
-        return $stmt->fetchAll();
+        return Database::getConnection();
     }
 
-    public static function find($id): ?array
+    public static function all(): array
     {
-        $pdo = Database::getConnection();
-        $stmt = $pdo->prepare('SELECT * FROM ' . static::$table . ' WHERE ' . static::$primaryKey . ' = :id LIMIT 1');
+        $stmt = static::db()->query('SELECT * FROM ' . static::$table);
+        $results = $stmt->fetchAll();
+        return array_map(fn($row) => new static($row), $results);
+    }
+
+    public static function find($id): ?static
+    {
+        $stmt = static::db()->prepare('SELECT * FROM ' . static::$table . ' WHERE ' . static::$primaryKey . ' = :id LIMIT 1');
         $stmt->execute(['id' => $id]);
         $result = $stmt->fetch();
-        return $result ?: null;
+        return $result ? new static($result) : null;
+    }
+
+    public static function findBySlug(string $slug): ?static
+    {
+        $stmt = static::db()->prepare('SELECT * FROM ' . static::$table . ' WHERE slug = :slug LIMIT 1');
+        $stmt->execute(['slug' => $slug]);
+        $result = $stmt->fetch();
+        return $result ? new static($result) : null;
     }
 
     public function save(): bool
     {
-        $pdo = Database::getConnection();
+        $db = static::db();
         $props = get_object_vars($this);
         unset($props['table'], $props['primaryKey']);
+
+        // Convertir les booléens en int pour MySQL
+        foreach ($props as $key => $value) {
+            if (is_bool($value)) {
+                $props[$key] = (int)$value;
+            }
+        }
+
         if (isset($this->{static::$primaryKey})) {
             // Update
             $fields = array_map(fn($k) => "$k = :$k", array_keys($props));
@@ -43,19 +64,21 @@ abstract class Model
             $placeholders = implode(', ', array_map(fn($k) => ":$k", array_keys($props)));
             $sql = 'INSERT INTO ' . static::$table . " ($columns) VALUES ($placeholders)";
         }
-        $stmt = $pdo->prepare($sql);
+
+        $stmt = $db->prepare($sql);
         $result = $stmt->execute($props);
+
         if (!isset($this->{static::$primaryKey})) {
-            $this->{static::$primaryKey} = $pdo->lastInsertId();
+            $this->{static::$primaryKey} = $db->lastInsertId();
         }
+
         return $result;
     }
 
     public function delete(): bool
     {
-        $pdo = Database::getConnection();
         $sql = 'DELETE FROM ' . static::$table . ' WHERE ' . static::$primaryKey . ' = ?';
-        $stmt = $pdo->prepare($sql);
+        $stmt = static::db()->prepare($sql);
         return $stmt->execute([$this->{static::$primaryKey}]);
     }
 }

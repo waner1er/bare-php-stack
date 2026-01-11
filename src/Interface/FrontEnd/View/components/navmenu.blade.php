@@ -1,13 +1,23 @@
 <nav>
     <ul>
-        <li><a href="{{ route('home') }}">Accueil</a></li>
+        @foreach ($menuItems as $item)
+            <li>
+                @if (isset($item['route']))
+                    <a href="{{ route($item['route']) }}">{{ $item['label'] }}</a>
+                @else
+                    <a href="{{ $item['url'] }}">{{ $item['label'] }}</a>
+                @endif
+            </li>
+        @endforeach
 
-        @if ($isAuthenticated)
-            <li>Bonjour {{ $user['first_name'] ?? 'Utilisateur' }} !</li>
-            <li><a href="/logout">Déconnexion</a></li>
-        @else
-            <li><a href="/login">Connexion</a></li>
-            <li><a href="/register">Inscription</a></li>
-        @endif
+        <li>
+            @if ($isAuthenticated)
+                <span>Bonjour {{ $user->getFirstName() }} !</span>
+                <a href="/logout">Déconnexion</a>
+            @else
+                <a href="/login">Connexion</a>
+                <a href="/register">Inscription</a>
+            @endif
+        </li>
     </ul>
 </nav>
