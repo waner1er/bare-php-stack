@@ -1,0 +1,88 @@
+// Admin topbar styles
+
+.admin-main {
+    margin-left: 260px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-topbar {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: $spacing-md $spacing-lg;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__left {
+        display: flex;
+        align-items: center;
+        gap: $spacing-md;
+    }
+
+    &__menu-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        background: none;
+        border: none;
+        cursor: pointer;
+
+        span {
+            width: 24px;
+            height: 2px;
+            background: $admin-text;
+        }
+    }
+
+    &__title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: $admin-text;
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        gap: $spacing-md;
+    }
+
+    &__user {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+    }
+
+    &__user-name {
+        font-size: 0.9rem;
+        color: $admin-text;
+    }
+
+    &__user-badge {
+        background: $admin-primary;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+}
+
+.admin-content {
+    flex: 1;
+    padding: $spacing-lg;
+}
+
+.admin-footer {
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    padding: $spacing-md $spacing-lg;
+    text-align: center;
+
+    &__text {
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+}

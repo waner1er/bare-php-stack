@@ -1,0 +1,20 @@
+// Admin page component
+
+.admin-page {
+    &__header {
+        margin-bottom: $spacing-lg;
+    }
+
+    &__title {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: $admin-text;
+        margin-bottom: $spacing-sm;
+    }
+
+    &__description {
+        font-size: 1rem;
+        color: #6b7280;
+        margin-bottom: $spacing-md;
+    }
+}

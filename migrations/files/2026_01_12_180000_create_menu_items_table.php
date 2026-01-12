@@ -1,0 +1,15 @@
+<?php
+
+// Migration: Create menu_items table
+// Generated: 2026_01_12_180000
+
+return "CREATE TABLE menuitems (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    label VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    position INT NOT NULL DEFAULT 0,
+    is_visible BOOLEAN NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";

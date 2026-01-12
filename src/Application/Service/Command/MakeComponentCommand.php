@@ -33,7 +33,7 @@ class MakeComponentCommand implements CommandInterface
         }
         echo "Votre choix : ";
         $choice = trim(fgets(STDIN));
-        $choiceIndex = (int)$choice - 1;
+        $choiceIndex = (int) $choice - 1;
         if (!is_numeric($choice) || !isset($dirs[$choiceIndex])) {
             echo "Choix invalide.\n";
             exit(1);

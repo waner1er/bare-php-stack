@@ -1,0 +1,26 @@
+// Utility classes
+
+.container {
+    max-width: $breakpoint-xl;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: $text-color;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-lg {
+    margin-top: $spacing-lg;
+}
+
+.mb-lg {
+    margin-bottom: $spacing-lg;
+}

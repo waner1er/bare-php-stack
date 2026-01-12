@@ -6,21 +6,19 @@ namespace App\Interface\FrontEnd\Controller;
 
 use App\Interface\Common\BaseController;
 use App\Interface\Common\Attribute\Route;
-use App\Domain\Entity\Post;
+use App\Domain\Repository\PostRepositoryInterface;
+use App\Infrastructure\Repository\PostRepository;
 
 class HomeController extends BaseController
 {
+    public function __construct(private PostRepositoryInterface $postRepository = new PostRepository()) {}
+
     #[Route('/', 'GET', 'home')]
     public function index(): void
     {
-        // Récupérer les derniers posts pour la page d'accueil
-        $db = Post::db();
-        $stmt = $db->query('SELECT * FROM posts WHERE category_id IS NOT NULL ORDER BY id DESC LIMIT 6');
-        $results = $stmt->fetchAll();
-        $recentPosts = array_map(fn($row) => new Post($row), $results);
 
         $this->render('home', [
-            'recentPosts' => $recentPosts
+            'recentPosts' => $this->postRepository->findAll(),
         ]);
     }
 }

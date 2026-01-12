@@ -8,7 +8,6 @@ use App\Interface\Common\Attribute\Route;
 use ReflectionClass;
 use ReflectionMethod;
 
-
 class Router
 {
     private array $routes = [];

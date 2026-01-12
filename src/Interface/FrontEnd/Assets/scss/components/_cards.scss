@@ -1,0 +1,87 @@
+// Card styles
+
+.post-card {
+    background: $white;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: $transition-base;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &__content {
+        padding: 25px;
+    }
+
+    &__category {
+        display: inline-block;
+        background: $primary-color;
+        color: $white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: $spacing-md;
+    }
+
+    &__title {
+        font-size: 1.5rem;
+        margin-bottom: $spacing-md;
+        color: $text-color;
+    }
+
+    &__excerpt {
+        color: $gray-dark;
+        margin-bottom: $spacing-lg;
+    }
+}
+
+.post-item {
+    background: $white;
+    padding: 30px;
+    border-radius: $border-radius;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: $transition-base;
+
+    &:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: $spacing-lg;
+    }
+
+    &__title {
+        font-size: 1.8rem;
+        color: $text-color;
+        margin-bottom: $spacing-xs;
+    }
+
+    &__category {
+        display: inline-block;
+        background: $primary-color;
+        color: $white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+
+    &__excerpt {
+        color: $gray-dark;
+        margin-bottom: $spacing-lg;
+        line-height: 1.8;
+    }
+
+    &__meta {
+        display: flex;
+        gap: $spacing-md;
+        color: $gray-dark;
+        font-size: 0.9rem;
+    }
+}

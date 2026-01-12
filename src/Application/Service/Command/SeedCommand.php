@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Service\Command;
 
 use App\Application\Service\Command\Interface\CommandInterface;
-
 use App\Application\Service\Command\Interface\OutputInterface;
 
 class SeedCommand implements CommandInterface
@@ -13,6 +12,7 @@ class SeedCommand implements CommandInterface
     private OutputInterface $output;
     private array $seederOrder = [
         'UserSeeder.php',
+        'CategorySeeder.php',
         'PostSeeder.php',
     ];
 

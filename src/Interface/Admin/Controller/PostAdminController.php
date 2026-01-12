@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Interface\Admin\Controller;
 
-use App\Domain\Entity\Post;
+use App\Domain\Repository\PostRepositoryInterface;
+use App\Infrastructure\Repository\PostRepository;
 use App\Interface\Common\Attribute\Route;
 use App\Interface\Common\BaseController;
 use App\Infrastructure\Middleware\AdminMiddleware;
@@ -13,23 +14,23 @@ use App\Infrastructure\Session\Session;
 
 class PostAdminController extends BaseController
 {
+    public function __construct(private PostRepositoryInterface $postRepository = new PostRepository()) {}
+
     #[Route('/admin/posts', 'GET')]
     public function index(): void
     {
         AdminMiddleware::handle();
 
-        $posts = Post::all();
-
-        // Réorganiser automatiquement les ordres pour éviter les doublons
         $this->reorderMenuItems();
 
-        // Récupérer les posts (tous les posts, triés par menu d'abord)
-        $db = Post::db();
-        $stmt = $db->query('SELECT * FROM posts ORDER BY is_in_menu DESC, menu_order ASC, title ASC');
-        $results = $stmt->fetchAll();
-        $posts = array_map(fn($row) => new Post($row), $results);
+        $posts = $this->postRepository->findAll();
+        usort(
+            $posts,
+            fn($a, $b)
+            => [$b->getIsInMenu(), $a->getMenuOrder(), $a->getTitle()]
+                <=> [$a->getIsInMenu(), $b->getMenuOrder(), $b->getTitle()],
+        );
 
-        // Créer un index de position pour les posts dans le menu
         $menuPositions = [];
         $position = 1;
         foreach ($posts as $post) {
@@ -40,7 +41,7 @@ class PostAdminController extends BaseController
 
         $this->render('posts.index', [
             'posts' => $posts,
-            'menuPositions' => $menuPositions
+            'menuPositions' => $menuPositions,
         ]);
     }
 
@@ -50,7 +51,7 @@ class PostAdminController extends BaseController
         AdminMiddleware::handle();
         CsrfMiddleware::handle();
 
-        $post = Post::find($id);
+        $post = $this->postRepository->find($id);
 
         if (!$post) {
             Session::flash('error', 'Article introuvable');
@@ -61,15 +62,16 @@ class PostAdminController extends BaseController
         $isInMenu = $post->getIsInMenu();
         $post->setIsInMenu(!$isInMenu);
 
-        // Si on ajoute au menu, mettre à la fin
         if (!$isInMenu) {
-            $db = Post::db();
-            $stmt = $db->query('SELECT MAX(menu_order) as max_order FROM posts WHERE is_in_menu = 1');
-            $maxOrder = $stmt->fetch()['max_order'] ?? 0;
+            $menuPosts = array_filter($this->postRepository->findAll(), fn($p) => $p->getIsInMenu());
+            $maxOrder = 0;
+            foreach ($menuPosts as $p) {
+                $maxOrder = max($maxOrder, $p->getMenuOrder());
+            }
             $post->setMenuOrder($maxOrder + 1);
         }
 
-        $post->save();
+        $this->postRepository->save($post);
 
         Session::flash('success', 'Menu mis à jour avec succès');
         header('Location: /admin/posts');
@@ -81,7 +83,7 @@ class PostAdminController extends BaseController
         AdminMiddleware::handle();
         CsrfMiddleware::handle();
 
-        $post = Post::find($id);
+        $post = $this->postRepository->find($id);
 
         if (!$post || !$post->getIsInMenu()) {
             Session::flash('error', 'Article introuvable');
@@ -91,22 +93,25 @@ class PostAdminController extends BaseController
 
         $currentOrder = $post->getMenuOrder();
 
-        // Trouver le post juste au-dessus
-        $db = Post::db();
-        $stmt = $db->prepare('SELECT * FROM posts WHERE is_in_menu = 1 AND menu_order < ? ORDER BY menu_order DESC LIMIT 1');
-        $stmt->execute([$currentOrder]);
-        $result = $stmt->fetch();
+        $menuPosts = array_filter($this->postRepository->findAll(), fn($p) => $p->getIsInMenu());
+        usort($menuPosts, fn($a, $b) => $b->getMenuOrder() <=> $a->getMenuOrder());
 
-        if ($result) {
-            $upperPost = new Post($result);
+        $upperPost = null;
+        foreach ($menuPosts as $p) {
+            if ($p->getMenuOrder() < $currentOrder) {
+                $upperPost = $p;
+                break;
+            }
+        }
+
+        if ($upperPost) {
             $upperOrder = $upperPost->getMenuOrder();
 
-            // Échanger les ordres
             $post->setMenuOrder($upperOrder);
             $upperPost->setMenuOrder($currentOrder);
 
-            $post->save();
-            $upperPost->save();
+            $this->postRepository->save($post);
+            $this->postRepository->save($upperPost);
         }
 
         header('Location: /admin/posts');
@@ -118,7 +123,7 @@ class PostAdminController extends BaseController
         AdminMiddleware::handle();
         CsrfMiddleware::handle();
 
-        $post = Post::find($id);
+        $post = $this->postRepository->find($id);
 
         if (!$post || !$post->getIsInMenu()) {
             Session::flash('error', 'Article introuvable');
@@ -128,41 +133,39 @@ class PostAdminController extends BaseController
 
         $currentOrder = $post->getMenuOrder();
 
-        // Trouver le post juste en-dessous
-        $db = Post::db();
-        $stmt = $db->prepare('SELECT * FROM posts WHERE is_in_menu = 1 AND menu_order > ? ORDER BY menu_order ASC LIMIT 1');
-        $stmt->execute([$currentOrder]);
-        $result = $stmt->fetch();
+        $menuPosts = array_filter($this->postRepository->findAll(), fn($p) => $p->getIsInMenu());
+        usort($menuPosts, fn($a, $b) => $a->getMenuOrder() <=> $b->getMenuOrder());
 
-        if ($result) {
-            $lowerPost = new Post($result);
+        $lowerPost = null;
+        foreach ($menuPosts as $p) {
+            if ($p->getMenuOrder() > $currentOrder) {
+                $lowerPost = $p;
+                break;
+            }
+        }
+
+        if ($lowerPost) {
             $lowerOrder = $lowerPost->getMenuOrder();
 
-            // Échanger les ordres
             $post->setMenuOrder($lowerOrder);
             $lowerPost->setMenuOrder($currentOrder);
 
-            $post->save();
-            $lowerPost->save();
+            $this->postRepository->save($post);
+            $this->postRepository->save($lowerPost);
         }
 
         header('Location: /admin/posts');
     }
 
-    /**
-     * Réorganise automatiquement les ordres du menu pour éliminer les doublons
-     */
     private function reorderMenuItems(): void
     {
-        $db = Post::db();
-        $stmt = $db->query('SELECT * FROM posts WHERE is_in_menu = 1 ORDER BY menu_order ASC, id ASC');
-        $menuPosts = $stmt->fetchAll();
+        $menuPosts = array_filter($this->postRepository->findAll(), fn($post) => $post->getIsInMenu());
+        usort($menuPosts, fn($a, $b) => $a->getMenuOrder() <=> $b->getMenuOrder());
 
         $order = 1;
-        foreach ($menuPosts as $postData) {
-            $db->prepare('UPDATE posts SET menu_order = ? WHERE id = ?')
-                ->execute([$order, $postData['id']]);
-            $order++;
+        foreach ($menuPosts as $post) {
+            $post->setMenuOrder($order++);
+            $this->postRepository->save($post);
         }
     }
 }

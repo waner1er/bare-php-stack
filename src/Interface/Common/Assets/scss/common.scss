@@ -1,0 +1,10 @@
+// Common/Shared styles used by both FrontEnd and Admin
+
+// Utilities
+@import 'utilities/helpers';
+@import 'utilities/spacing';
+@import 'utilities/text';
+
+// Shared components
+@import 'components/alerts';
+@import 'components/modals';

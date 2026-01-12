@@ -1,0 +1,28 @@
+// Navigation styles
+
+.nav-menu {
+    display: flex;
+    gap: $spacing-md;
+    list-style: none;
+
+    &__item {
+        position: relative;
+    }
+
+    &__link {
+        padding: $spacing-xs $spacing-md;
+        color: $text-color;
+        font-weight: 500;
+        border-radius: $border-radius-sm;
+
+        &:hover {
+            color: $primary-color;
+            background: rgba($primary-color, 0.1);
+        }
+
+        &--active {
+            color: $primary-color;
+            background: rgba($primary-color, 0.1);
+        }
+    }
+}

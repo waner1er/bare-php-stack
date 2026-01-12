@@ -1,0 +1,42 @@
+// Home page styles
+
+.hero {
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    color: $white;
+    padding: 100px 20px;
+    text-align: center;
+
+    &__title {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    &__subtitle {
+        font-size: 1.5rem;
+        opacity: 0.9;
+    }
+}
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.cta-section {
+    background: $bg-color;
+    padding: 80px 20px;
+    text-align: center;
+
+    &__title {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: $text-color;
+    }
+
+    &__text {
+        font-size: 1.2rem;
+        color: $gray-dark;
+        margin-bottom: 30px;
+    }
+}

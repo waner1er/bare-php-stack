@@ -51,7 +51,7 @@ class MigrateCommand implements CommandInterface
                 if (is_string($sql) && !empty($sql)) {
                     $newMigrations[] = [
                         'file' => $fileName,
-                        'sql' => $sql
+                        'sql' => $sql,
                     ];
                 }
             }

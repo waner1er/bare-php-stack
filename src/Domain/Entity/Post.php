@@ -5,10 +5,25 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Abstract\Model;
+use App\Domain\Contract\SlugResourceInterface;
 
-
-class Post extends Model
+class Post extends Model implements SlugResourceInterface
 {
+    /**
+     * Retourne tous les slugs de posts à afficher dans le menu
+     * @return array<int, array{slug: string, title: string, type: string}>
+     */
+    public static function getAllSlugsForMenu(): array
+    {
+        return array_map(
+            fn($post) => [
+                'slug' => $post->getSlug(),
+                'title' => $post->getTitle(),
+                'type' => 'post',
+            ],
+            array_filter(static::all(), fn($post) => $post->getIsInMenu()),
+        );
+    }
     protected static string $table = 'posts';
     protected static string $primaryKey = 'id';
 
@@ -26,7 +41,7 @@ class Post extends Model
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
                 if ($key === 'is_in_menu') {
-                    $this->$key = (bool)$value;
+                    $this->$key = (bool) $value;
                 } else {
                     $this->$key = $value;
                 }
@@ -129,18 +144,18 @@ class Post extends Model
 
     public static function getMenuItems(): array
     {
-        $stmt = static::db()->prepare('SELECT * FROM ' . static::$table . ' WHERE is_in_menu = 1 ORDER BY menu_order ASC');
-        $stmt->execute();
-        $results = $stmt->fetchAll();
-        return array_map(fn($row) => new static($row), $results);
+        $posts = static::all();
+        $menuPosts = array_filter($posts, fn($post) => $post->getIsInMenu());
+        usort($menuPosts, fn($a, $b) => $a->getMenuOrder() <=> $b->getMenuOrder());
+        return $menuPosts;
     }
 
 
     public static function getByCategory(int $categoryId): array
     {
-        $stmt = static::db()->prepare('SELECT * FROM ' . static::$table . ' WHERE category_id = ? ORDER BY id DESC');
-        $stmt->execute([$categoryId]);
-        $results = $stmt->fetchAll();
-        return array_map(fn($row) => new static($row), $results);
+        $posts = static::all();
+        $filtered = array_filter($posts, fn($post) => $post->getCategoryId() === $categoryId);
+        usort($filtered, fn($a, $b) => $b->getId() <=> $a->getId());
+        return $filtered;
     }
 }

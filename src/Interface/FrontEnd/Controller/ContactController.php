@@ -25,7 +25,6 @@ class ContactController extends BaseController
         $email = $_POST['email'] ?? '';
         $message = $_POST['message'] ?? '';
 
-        // Validation basique
         if (empty($name) || empty($email) || empty($message)) {
             $_SESSION['error'] = 'Tous les champs sont requis.';
             header('Location: /contact');

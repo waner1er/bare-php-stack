@@ -1,0 +1,52 @@
+// Archive page styles
+
+.archive-page {
+    min-height: 70vh;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.categories-filter {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 50px;
+}
+
+.category-btn {
+    padding: 10px 25px;
+    background: $white;
+    color: $text-color;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: $transition-base;
+    border: 2px solid transparent;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    &--active {
+        background: $primary-color;
+        color: $white;
+        border-color: $primary-color;
+    }
+}
+
+.posts-list {
+    display: grid;
+    gap: 30px;
+}
+
+.no-posts {
+    text-align: center;
+    padding: $spacing-xl;
+    background: $white;
+    border-radius: $border-radius;
+    color: $gray-dark;
+}

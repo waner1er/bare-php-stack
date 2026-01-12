@@ -5,125 +5,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Back Office - Admin</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 250px;
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-        }
-
-        .sidebar h1 {
-            font-size: 24px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar nav a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 12px 15px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .sidebar nav a:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar nav a.active {
-            background: #3498db;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 30px;
-        }
-
-        .header {
-            background: white;
-            padding: 20px 30px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .content {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: opacity 0.3s;
-        }
-
-        .btn:hover {
-            opacity: 0.8;
-        }
-
-        .btn-primary {
-            background: #3498db;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="/dist/css/admin-style.css">
+    <link rel="stylesheet" href="/dist/css/common-style.css">
 </head>
 
-<body>
-    <aside class="sidebar">
-        <h1>🔧 Admin Panel</h1>
-        <nav>
-            <a href="/admin">📊 Dashboard</a>
-            <a href="/admin/posts">📝 Gestion du menu</a>
-            <a href="/admin/users">👥 Utilisateurs</a>
-            <a href="/">🌐 Voir le site</a>
-            <a href="/logout">🚪 Déconnexion</a>
+<body class="admin-layout">
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar__header">
+            <h1 class="admin-sidebar__logo">🔧 Admin Panel</h1>
+        </div>
+
+        <nav class="admin-sidebar__nav">
+            <a href="/admin"
+                class="admin-sidebar__link {{ $_SERVER['REQUEST_URI'] === '/admin' ? 'admin-sidebar__link--active' : '' }}">
+                <span class="admin-sidebar__icon">📊</span>
+                <span class="admin-sidebar__text">Dashboard</span>
+            </a>
+            <a href="/admin/posts"
+                class="admin-sidebar__link {{ str_contains($_SERVER['REQUEST_URI'], '/admin/posts') ? 'admin-sidebar__link--active' : '' }}">
+                <span class="admin-sidebar__icon">📝</span>
+                <span class="admin-sidebar__text">Articles</span>
+            </a>
+            <a href="/admin/menu"
+                class="admin-sidebar__link {{ str_contains($_SERVER['REQUEST_URI'], '/admin/menu') ? 'admin-sidebar__link--active' : '' }}">
+                <span class="admin-sidebar__icon">🗂️</span>
+                <span class="admin-sidebar__text">Menu</span>
+            </a>
+            <a href="/admin/users" class="admin-sidebar__link">
+                <span class="admin-sidebar__icon">👥</span>
+                <span class="admin-sidebar__text">Utilisateurs</span>
+            </a>
         </nav>
+
+        <div class="admin-sidebar__footer">
+            <a href="/" class="admin-sidebar__link admin-sidebar__link--secondary">
+                <span class="admin-sidebar__icon">🌐</span>
+                <span class="admin-sidebar__text">Voir le site</span>
+            </a>
+            <a href="/logout" class="admin-sidebar__link admin-sidebar__link--danger">
+                <span class="admin-sidebar__icon">🚪</span>
+                <span class="admin-sidebar__text">Déconnexion</span>
+            </a>
+        </div>
     </aside>
 
-    <div class="main-content">
-        <div class="header">
-            <h2>Back Office</h2>
-            <div>
-                Connecté en tant qu'administrateur
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <div class="admin-topbar__left">
+                <button class="admin-topbar__menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <h2 class="admin-topbar__title">{{ $pageTitle ?? 'Administration' }}</h2>
             </div>
-        </div>
 
-        <div class="content">
+            <div class="admin-topbar__right">
+                <div class="admin-topbar__user">
+                    <span class="admin-topbar__user-name">Administrateur</span>
+                    <span class="admin-topbar__user-badge">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="admin-content">
             {{ $slot }}
-        </div>
+        </main>
+
+        <footer class="admin-footer">
+            <p class="admin-footer__text">© {{ date('Y') }} - Back Office Administration</p>
+        </footer>
     </div>
+
+    <script type="module" src="/dist/js/admin.js"></script>
+    <script type="module" src="/dist/js/common.js"></script>
 </body>
 
 </html>

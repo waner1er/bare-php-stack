@@ -96,4 +96,9 @@ class User extends Model
     {
         return $this->first_name . ' ' . $this->last_name;
     }
+
+    public static function findByEmail(string $email): ?self
+    {
+        return static::findBy('email', $email);
+    }
 }
