@@ -1,0 +1,87 @@
+// Admin forms styles
+
+.admin-form--inline {
+    display: inline;
+}
+
+.admin-form {
+    background: white;
+    padding: $spacing-lg;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-form__group {
+    margin-bottom: $spacing-md;
+}
+
+.admin-form__label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    font-weight: 600;
+    color: $admin-text;
+    font-size: 0.95rem;
+}
+
+.admin-form__input,
+.admin-form__select,
+.admin-form__textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+
+    &:focus {
+        outline: none;
+        border-color: $admin-primary;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    &:disabled {
+        background: #f3f4f6;
+        cursor: not-allowed;
+    }
+}
+
+.admin-form__hint {
+    display: block;
+    margin-top: $spacing-xs;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.admin-form__error {
+    display: block;
+    margin-top: $spacing-xs;
+    font-size: 0.875rem;
+    color: $admin-danger;
+}
+
+.admin-form__warning {
+    display: block;
+    margin-top: $spacing-xs;
+    font-size: 0.875rem;
+    color: $admin-warning;
+}
+
+.admin-checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: $admin-primary;
+}
+
+.admin-position-controls {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+
+    &__value {
+        min-width: 2rem;
+        text-align: center;
+        font-weight: 600;
+        color: $admin-primary;
+    }
+}

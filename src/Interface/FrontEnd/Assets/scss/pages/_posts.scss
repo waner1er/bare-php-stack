@@ -1,0 +1,74 @@
+// Posts page styles
+
+.post-full {
+    background: $white;
+    padding: 40px;
+    border-radius: $border-radius;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: $spacing-lg;
+
+    &__header {
+        margin-bottom: $spacing-xl;
+        padding-bottom: $spacing-lg;
+        border-bottom: 2px solid $gray-light;
+    }
+
+    &__title {
+        font-size: 2.5rem;
+        margin-bottom: $spacing-md;
+        color: $text-color;
+    }
+
+    &__content {
+        line-height: 1.8;
+        color: $text-color;
+
+        h2 {
+            margin-top: $spacing-xl;
+            margin-bottom: $spacing-md;
+        }
+
+        h3 {
+            margin-top: $spacing-lg;
+            margin-bottom: $spacing-sm;
+        }
+
+        p {
+            margin-bottom: $spacing-md;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: $border-radius-sm;
+            margin: $spacing-lg 0;
+        }
+
+        code {
+            background: $bg-color;
+            padding: 2px 6px;
+            border-radius: $border-radius-sm;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: $text-color;
+            color: $white;
+            padding: $spacing-md;
+            border-radius: $border-radius-sm;
+            overflow-x: auto;
+            margin: $spacing-lg 0;
+
+            code {
+                background: transparent;
+                padding: 0;
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}

@@ -5,7 +5,6 @@ namespace App\Application\Service\Command;
 use App\Infrastructure\Database\Database;
 use App\Infrastructure\Session\DatabaseSessionHandler;
 use App\Application\Service\Command\Interface\CommandInterface;
-
 use App\Application\Service\Command\Interface\OutputInterface;
 
 class SessionCleanCommand implements CommandInterface

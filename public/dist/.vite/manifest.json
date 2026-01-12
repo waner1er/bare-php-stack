@@ -1,0 +1,44 @@
+{
+  "src/Interface/Admin/Assets/js/admin.js": {
+    "file": "js/admin.js",
+    "name": "admin",
+    "src": "src/Interface/Admin/Assets/js/admin.js",
+    "isEntry": true,
+    "css": [
+      "css/admin-style.css"
+    ]
+  },
+  "src/Interface/Admin/Assets/scss/admin.scss": {
+    "file": "css/admin-style.css",
+    "src": "src/Interface/Admin/Assets/scss/admin.scss",
+    "isEntry": true
+  },
+  "src/Interface/Common/Assets/js/common.js": {
+    "file": "js/common.js",
+    "name": "common",
+    "src": "src/Interface/Common/Assets/js/common.js",
+    "isEntry": true,
+    "css": [
+      "css/common-style.css"
+    ]
+  },
+  "src/Interface/Common/Assets/scss/common.scss": {
+    "file": "css/common-style.css",
+    "src": "src/Interface/Common/Assets/scss/common.scss",
+    "isEntry": true
+  },
+  "src/Interface/FrontEnd/Assets/js/app.js": {
+    "file": "js/frontend.js",
+    "name": "frontend",
+    "src": "src/Interface/FrontEnd/Assets/js/app.js",
+    "isEntry": true,
+    "css": [
+      "css/frontend-style.css"
+    ]
+  },
+  "src/Interface/FrontEnd/Assets/scss/app.scss": {
+    "file": "css/frontend-style.css",
+    "src": "src/Interface/FrontEnd/Assets/scss/app.scss",
+    "isEntry": true
+  }
+}

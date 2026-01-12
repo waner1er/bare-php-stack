@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Auth;
 
-use App\Infrastructure\Database\Database;
 use App\Infrastructure\Session\Session;
 use App\Domain\Entity\User;
 
@@ -12,22 +11,14 @@ class Auth
 {
     public static function attempt(string $email, string $password): bool
     {
-        $pdo = Database::getConnection();
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
-        $stmt->execute(['email' => $email]);
-        $userData = $stmt->fetch();
+        $user = User::findByEmail($email);
 
-        if (!$userData) {
+        if (!$user || !password_verify($password, $user->password)) {
             return false;
         }
 
-        if (!password_verify($password, $userData['password'])) {
-            return false;
-        }
-
-        Session::set('user_id', $userData['id']);
-        Session::set('user_email', $userData['email']);
-
+        Session::set('user_id', $user->getId());
+        Session::set('user_email', $user->getEmail());
         Session::regenerate();
 
         return true;
@@ -61,23 +52,24 @@ class Auth
 
     public static function register(string $firstName, string $lastName, string $email, string $password): bool
     {
-        $pdo = Database::getConnection();
-
-        $stmt = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
-        $stmt->execute(['email' => $email]);
-        if ($stmt->fetch()) {
+        if (User::findByEmail($email)) {
             return false;
         }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare('INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)');
-        $result = $stmt->execute([$firstName, $lastName, $email, $hashedPassword]);
+        $user = new User([
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'email' => $email,
+            'password' => $hashedPassword,
+            'role' => 'user',
+        ]);
+
+        $result = $user->save();
 
         if ($result) {
-            $userId = $pdo->lastInsertId();
-            Session::set('user_id', $userId);
-            Session::set('user_email', $email);
-
+            Session::set('user_id', $user->getId());
+            Session::set('user_email', $user->getEmail());
             Session::regenerate();
         }
 

@@ -1,0 +1,55 @@
+// Forms styles
+
+.form {
+    background: $white;
+    padding: 40px;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &__group {
+        margin-bottom: 25px;
+    }
+
+    &__label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: $text-color;
+    }
+
+    &__input,
+    &__textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: $border-radius-sm;
+        font-size: 1rem;
+        font-family: $font-family;
+        transition: border-color 0.3s;
+
+        &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+        }
+    }
+
+    &__textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    &__error {
+        color: #e74c3c;
+        font-size: 0.875rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    &__success {
+        color: #27ae60;
+        font-size: 0.875rem;
+        margin-top: 5px;
+        display: block;
+    }
+}

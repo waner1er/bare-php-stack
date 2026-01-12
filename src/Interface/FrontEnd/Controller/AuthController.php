@@ -39,17 +39,14 @@ class AuthController extends BaseController
         }
 
         if (Auth::attempt($email, $password)) {
-            // Récupérer l'utilisateur connecté
             $user = Auth::user();
 
-            // Redirection selon le rôle
             if ($user && $user->getRole() === 'admin') {
                 $defaultRedirect = '/admin';
             } else {
                 $defaultRedirect = '/';
             }
 
-            // Redirige vers l'URL prévue ou selon le rôle
             $redirectTo = AuthMiddleware::getIntendedUrl($defaultRedirect);
             header('Location: ' . $redirectTo);
             exit;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Service\Command;
 
 use App\Application\Service\Command\Interface\CommandInterface;
-
 use App\Application\Service\Command\Interface\OutputInterface;
 
 class DatabaseCreateCommand implements CommandInterface

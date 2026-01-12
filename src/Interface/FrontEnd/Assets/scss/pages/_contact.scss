@@ -1,0 +1,58 @@
+// Contact page styles
+
+.contact-page {
+    min-height: 70vh;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: $text-color;
+}
+
+.page-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: $gray-dark;
+    margin-bottom: 50px;
+}
+
+.contact-info {
+    background: $white;
+    padding: 30px;
+    border-radius: $border-radius;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+
+    &__title {
+        font-size: 1.5rem;
+        margin-bottom: $spacing-md;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        margin-bottom: $spacing-sm;
+        color: $gray-dark;
+    }
+}
+
+.alert {
+    padding: $spacing-md;
+    margin-bottom: $spacing-lg;
+    border-radius: $border-radius-sm;
+    
+    &--success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    &--error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+}

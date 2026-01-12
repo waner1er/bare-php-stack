@@ -1,0 +1,27 @@
+// Admin typography
+
+.admin-page__title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: $admin-text;
+    margin-bottom: $spacing-sm;
+}
+
+.admin-page__description {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: $spacing-md;
+}
+
+.admin-text--muted {
+    color: #9ca3af;
+}
+
+.admin-code {
+    font-family: 'Courier New', monospace;
+    background: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: #ef4444;
+}

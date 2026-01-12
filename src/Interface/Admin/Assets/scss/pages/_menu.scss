@@ -1,0 +1,128 @@
+// Admin menu page styles
+
+.menu-section {
+    background: white;
+    padding: $spacing-lg;
+    margin-bottom: $spacing-lg;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.menu-section__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $admin-text;
+    margin-bottom: $spacing-md;
+}
+
+.menu-section__subtitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $admin-text;
+    margin: $spacing-md 0 $spacing-sm 0;
+}
+
+// Slug cards grid
+.slug-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: $spacing-md;
+    margin: $spacing-md 0;
+}
+
+.slug-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: $spacing-md;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        border-color: $admin-primary;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+        transform: translateY(-2px);
+    }
+}
+
+.slug-card__title {
+    font-weight: 700;
+    margin-bottom: $spacing-sm;
+    color: $admin-text;
+    font-size: 1rem;
+}
+
+.slug-card__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.slug-card__path {
+    color: #6b7280;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+
+.slug-card__type {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+// Badge types
+.badge-post {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-page {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.badge-archive {
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+.badge-static {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-custom {
+    background: #fce7f3;
+    color: #be185d;
+}
+
+// No slugs message
+.no-slugs {
+    color: #6b7280;
+    font-style: italic;
+    padding: $spacing-md;
+    text-align: center;
+}
+
+// Menu visibility badge
+.menu-visibility {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+
+    &--visible {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    &--hidden {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+}

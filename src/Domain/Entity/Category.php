@@ -65,23 +65,13 @@ class Category extends Model
         $this->description = $description;
     }
 
-    /**
-     * Récupérer tous les posts de cette catégorie
-     */
     public function getPosts(): array
     {
-        $db = static::db();
-        $stmt = $db->prepare('SELECT * FROM posts WHERE category_id = ? ORDER BY id DESC');
-    /**
-     * Compter les posts de cette catégorie
-     */
+        return Post::getByCategory($this->id);
+    }
+
     public function getPostCount(): int
     {
-        $db = static::db();
-        $stmt = $db->prepare('SELECT COUNT(*) as count FROM posts WHERE category_id = ?');
-        $stmt->execute([$this->id]);
-        $result = $stmt->fetch();
-
-        return (int)$result['count'];
+        return count($this->getPosts());
     }
 }

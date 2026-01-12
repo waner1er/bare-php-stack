@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Service\Command;
 
 use App\Application\Service\Command\Interface\CommandInterface;
-
 use App\Application\Service\Command\Interface\OutputInterface;
 
 class MakeSeederCommand implements CommandInterface
@@ -41,13 +40,11 @@ class MakeSeederCommand implements CommandInterface
             return;
         }
 
-        // Vérifier si le modèle existe
         if (!file_exists($modelPath)) {
             $this->output->writeln("Le modèle {$modelName} n'existe pas.");
             return;
         }
 
-        // Analyser le modèle pour extraire les propriétés
         $properties = $this->parseModel($modelPath);
 
         if (empty($properties)) {
@@ -55,7 +52,6 @@ class MakeSeederCommand implements CommandInterface
             exit(1);
         }
 
-        // Générer le code du seeder
         $content = $this->generateSeeder($modelName, $properties);
 
         file_put_contents($filePath, $content);
@@ -67,18 +63,16 @@ class MakeSeederCommand implements CommandInterface
         $content = file_get_contents($modelPath);
         $properties = [];
 
-        // Extraire la table name
         preg_match('/protected static string \$table = \'([^\']+)\'/', $content, $tableMatch);
         $tableName = $tableMatch[1] ?? '';
 
-        // Extraire les propriétés publiques
         preg_match_all('/public (int|string|bool|float|\?string) \$([a-zA-Z_]+);/', $content, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
-            $type = str_replace('?', '', $match[1]); // Retirer le ? pour les types nullable
+            $type = str_replace('?', '', $match[1]);
             $name = $match[2];
 
-            if ($name !== 'id') { // Ignorer l'ID qui est auto-increment
+            if ($name !== 'id') {
                 $properties[] = [
                     'name' => $name,
                     'type' => $type,
@@ -91,44 +85,32 @@ class MakeSeederCommand implements CommandInterface
 
     private function generateSeeder(string $modelName, array $data): string
     {
-        $tableName = $data['table'];
         $properties = $data['properties'];
 
-        // Générer les colonnes pour l'INSERT
-        $columns = array_map(fn($p) => $p['name'], $properties);
-        $columnsStr = implode(', ', $columns);
-        $placeholders = implode(', ', array_fill(0, count($columns), '?'));
-
-        // Générer les valeurs Faker
-        $fakerValues = [];
+        $fakerArray = [];
         foreach ($properties as $prop) {
-            $fakerValues[] = $this->getFakerMethod($prop['name'], $prop['type']);
+            $fakerArray[] = "        '{$prop['name']}' => " . $this->getFakerMethod($prop['name'], $prop['type']);
         }
-        $fakerValuesStr = implode(",\n            ", $fakerValues);
+        $fakerArrayStr = implode(",\n", $fakerArray);
 
         return <<<PHP
 <?php
 
-// Seeder: {$modelName}
-// Génère des données pour la table '{$tableName}'
-
 use Faker\Factory;
-use App\Infrastructure\Database;
+use App\Domain\Entity\\{$modelName};
 
 return function() {
     \$faker = Factory::create();
-    \$pdo = Database::getConnection();
-    
     \$count = 20;
-    
+
     for (\$i = 0; \$i < \$count; \$i++) {
-        \$stmt = \$pdo->prepare("INSERT INTO {$tableName} ({$columnsStr}) VALUES ({$placeholders})");
-        \$stmt->execute([
-            {$fakerValuesStr}
+        \$model = new {$modelName}([
+{$fakerArrayStr}
         ]);
+        \$model->save();
     }
-    
-    echo "  ✓ {\$count} {$tableName} créés\\n";
+
+    echo "  ✓ {\$count} {$modelName} créés\\n";
 };
 
 PHP;
@@ -136,7 +118,6 @@ PHP;
 
     private function getFakerMethod(string $propertyName, string $type): string
     {
-        // Mapping intelligent basé sur le nom de la propriété
         $lowerName = strtolower($propertyName);
 
         if (str_contains($lowerName, 'email')) {
@@ -170,7 +151,6 @@ PHP;
             return '$faker->url()';
         }
 
-        // Mapping par type si aucun pattern n'est trouvé
         return match ($type) {
             'int' => '$faker->numberBetween(1, 100)',
             'float' => '$faker->randomFloat(2, 0, 1000)',

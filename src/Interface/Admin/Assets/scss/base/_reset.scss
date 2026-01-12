@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.admin-layout {
+    font-family: $font-family;
+    background-color: $admin-bg;
+    color: $admin-text;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    font-family: $font-family;
+    cursor: pointer;
+}
+
+input, select, textarea {
+    font-family: $font-family;
+}

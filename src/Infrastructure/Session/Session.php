@@ -11,25 +11,23 @@ class Session
     public static function start(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
-            // Initialiser le handler de session en base de données
             if (self::$handler === null) {
                 $pdo = Database::getConnection();
-                $lifetime = (int) ($_ENV['SESSION_LIFETIME'] ?? 7200); // 2 heures par défaut
+                $lifetime = (int) ($_ENV['SESSION_LIFETIME'] ?? 7200);
                 self::$handler = new DatabaseSessionHandler($pdo, $lifetime);
                 session_set_save_handler(self::$handler, true);
             }
 
-            // Configuration sécurisée des cookies de session
             $isSecure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
 
             session_start([
-                'cookie_lifetime' => 0, // Session cookie (expire à la fermeture du navigateur)
-                'cookie_httponly' => true, // Protection XSS
-                'cookie_secure' => $isSecure, // HTTPS uniquement si disponible
-                'cookie_samesite' => 'Lax', // Protection CSRF
+                'cookie_lifetime' => 0,
+                'cookie_httponly' => true,
+                'cookie_secure' => $isSecure,
+                'cookie_samesite' => 'Lax',
                 'gc_maxlifetime' => (int) ($_ENV['SESSION_LIFETIME'] ?? 7200),
                 'gc_probability' => 1,
-                'gc_divisor' => 100
+                'gc_divisor' => 100,
             ]);
         }
     }

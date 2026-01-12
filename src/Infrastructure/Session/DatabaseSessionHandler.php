@@ -29,12 +29,12 @@ class DatabaseSessionHandler implements SessionHandlerInterface
     public function read(string $id): string|false
     {
         $stmt = $this->pdo->prepare(
-            'SELECT payload FROM sessions WHERE id = :id AND last_activity >= :expiration LIMIT 1'
+            'SELECT payload FROM sessions WHERE id = :id AND last_activity >= :expiration LIMIT 1',
         );
 
         $stmt->execute([
             'id' => $id,
-            'expiration' => time() - $this->lifetime
+            'expiration' => time() - $this->lifetime,
         ]);
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -66,7 +66,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
                 payload = VALUES(payload),
                 last_activity = VALUES(last_activity),
                 ip_address = VALUES(ip_address),
-                user_agent = VALUES(user_agent)'
+                user_agent = VALUES(user_agent)',
         );
 
         return $stmt->execute([
@@ -75,7 +75,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
             'payload' => $payload,
             'last_activity' => $lastActivity,
             'ip_address' => $ipAddress,
-            'user_agent' => $userAgent
+            'user_agent' => $userAgent,
         ]);
     }
 
@@ -92,9 +92,6 @@ class DatabaseSessionHandler implements SessionHandlerInterface
         return $stmt->rowCount();
     }
 
-    /**
-     * Nettoie toutes les sessions expirées
-     */
     public function clean(): int
     {
         $stmt = $this->pdo->prepare('DELETE FROM sessions WHERE last_activity < :expiration');
@@ -102,9 +99,6 @@ class DatabaseSessionHandler implements SessionHandlerInterface
         return $stmt->rowCount();
     }
 
-    /**
-     * Détruit toutes les sessions d'un utilisateur (utile pour déconnexion de tous les appareils)
-     */
     public function destroyUserSessions(int $userId): bool
     {
         $stmt = $this->pdo->prepare('DELETE FROM sessions WHERE user_id = :user_id');

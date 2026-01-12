@@ -6,7 +6,7 @@ namespace App\Interface\FrontEnd\Component;
 
 use App\Infrastructure\Auth\Auth;
 use App\Infrastructure\Blade\Blade;
-use App\Domain\Entity\Post;
+use App\Domain\Entity\MenuItem;
 
 class NavMenu
 {
@@ -19,18 +19,41 @@ class NavMenu
 
     private function buildMenu(): void
     {
-        // Menu de base
-        $this->menuItems = [
-            ['label' => 'Accueil', 'route' => 'home'],
-        ];
+        // Récupérer les items de menu visibles depuis la table menu_items
+        $menuItems = MenuItem::getVisibleItems();
 
-        // Ajouter les posts marqués pour le menu
-        $posts = Post::getMenuItems();
+        $this->menuItems = [];
+        foreach ($menuItems as $item) {
+            $slug = $item->getSlug();
+            $type = $item->getType();
+            $categoryId = $item->getCategoryId();
+            $entityType = $item->getEntityType();
 
-        foreach ($posts as $post) {
+            // Générer l'URL en fonction du type
+            if ($type === 'archive') {
+                $entityPath = strtolower($entityType) . 's'; // Post -> posts, Product -> products
+
+                if ($categoryId) {
+                    // Archive avec catégorie spécifique : /posts/{category-slug} ou /products/{category-slug}
+                    $category = \App\Domain\Entity\Category::find($categoryId);
+                    $url = $category ? '/' . $entityPath . '/' . $category->getSlug() : '/' . $entityPath;
+                } else {
+                    // Archive sans catégorie : /posts (tous les items)
+                    $url = '/' . $entityPath;
+                }
+            } else {
+                // Pour les items individuels
+                $url = match ($type) {
+                    'post' => '/' . $slug,  // Posts dans le menu = URL à la racine
+                    'static' => $slug === 'accueil' ? '/' : '/' . $slug,
+                    default => '/' . $slug,
+                };
+            }
+
             $this->menuItems[] = [
-                'label' => $post->getTitle(),
-                'url' => '/posts/' . $post->getSlug(),
+                'label' => $item->getLabel(),
+                'url' => $url,
+                'type' => $type,
             ];
         }
     }

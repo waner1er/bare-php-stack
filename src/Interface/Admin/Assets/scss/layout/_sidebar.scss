@@ -1,0 +1,73 @@
+// Admin sidebar styles
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background: $admin-sidebar-bg;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+
+    &__header {
+        padding: $spacing-md;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    &__logo {
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    &__nav {
+        flex: 1;
+        padding: $spacing-sm 0;
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+        padding: $spacing-sm $spacing-md;
+        transition: background 0.2s;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        &--active {
+            background: $admin-primary;
+            border-left: 4px solid white;
+        }
+
+        &--secondary {
+            color: #9ca3af;
+        }
+
+        &--danger {
+            color: $admin-danger;
+            &:hover {
+                background: rgba(239, 68, 68, 0.1);
+            }
+        }
+    }
+
+    &__icon {
+        font-size: 1.25rem;
+        margin-right: $spacing-sm;
+    }
+
+    &__text {
+        font-size: 0.95rem;
+    }
+
+    &__footer {
+        padding: $spacing-sm 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}

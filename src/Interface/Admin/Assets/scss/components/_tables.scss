@@ -1,0 +1,64 @@
+// Admin tables styles
+
+.admin-table-wrapper {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    &__head {
+        background: #f9fafb;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    &__row {
+        transition: background 0.2s;
+
+        &:hover {
+            background: #f9fafb;
+        }
+    }
+
+    &__header {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        &--center {
+            text-align: center;
+        }
+    }
+
+    &__cell {
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        color: $admin-text;
+
+        &--center {
+            text-align: center;
+        }
+    }
+
+    &__body tr:last-child &__cell {
+        border-bottom: none;
+    }
+}
+
+.admin-empty-state {
+    background: white;
+    padding: $spacing-xl;
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

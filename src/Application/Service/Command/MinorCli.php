@@ -15,9 +15,6 @@ use App\Application\Service\Command\MakeComponentCommand;
 use App\Application\Service\Command\DatabaseCreateCommand;
 use App\Application\Service\Command\MakeControllerCommand;
 
-
-
-
 class MinorCli
 {
     private array $commands = [];
@@ -51,7 +48,9 @@ class MinorCli
         $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         $env = [];
         foreach ($lines as $line) {
-            if (strpos(trim($line), '#') === 0) continue;
+            if (strpos(trim($line), '#') === 0) {
+                continue;
+            }
             [$key, $value] = explode('=', $line, 2);
             $env[trim($key)] = trim($value);
         }

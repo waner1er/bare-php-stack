@@ -1,0 +1,460 @@
+@component('components.bo-layout')
+
+    <style>
+        .menu-admin {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .menu-actions,
+        .menu-list {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin: 15px 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            margin: 2px;
+        }
+
+        button[type="submit"] {
+            background: #007bff;
+            color: white;
+        }
+
+        button[type="submit"]:hover {
+            background: #0056b3;
+        }
+
+        .available-slugs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .slug-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .slug-card:hover {
+            border-color: #007bff;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+        }
+
+        .slug-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .slug-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+        }
+
+        .slug-path {
+            color: #666;
+            font-family: monospace;
+        }
+
+        .slug-type {
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+
+        .badge-post {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-page {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-archive {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-static {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-custom {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .no-slugs {
+            color: #666;
+            font-style: italic;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+    </style>
+    <div class="menu-admin">
+        <h1>Gestion du menu</h1>
+
+        @if ($success ?? false)
+            <div class="alert alert-success">{{ $success }}</div>
+        @endif
+
+        @if ($error ?? false)
+            <div class="alert alert-error">{{ $error }}</div>
+        @endif
+
+        <div class="menu-actions">
+            <h2>Ajouter un élément au menu</h2>
+            <form method="POST" action="/admin/menu/add" id="menuForm">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                <div class="form-group">
+                    <label for="label">Label :</label>
+                    <input type="text" id="label" name="label" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="slug">Slug :</label>
+                    <input type="text" id="slug" name="slug" required>
+                    <small id="slug-error" style="color: red; display: none;"></small>
+                    <small id="slug-warning" style="color: orange; display: none;"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Type :</label>
+                    <select id="type" name="type" onchange="toggleCategorySelect()">
+                        <option value="post">Article individuel</option>
+                        <option value="archive">Liste d'articles</option>
+                    </select>
+                    <small style="color: #666; display: block; margin-top: 4px;">Articles individuels ou liste complète/par
+                        catégorie.</small>
+                </div>
+
+                <div class="form-group" id="categoryGroup" style="display: none;">
+                    <label for="category_id">Catégorie (optionnel) :</label>
+                    <select id="category_id" name="category_id" onchange="updateLabelAndSlugFromCategory()">
+                        <option value="">Toutes les catégories</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->getId() }}" data-name="{{ $category->getName() }}"
+                                data-slug="{{ $category->getSlug() }}">{{ $category->getName() }}</option>
+                        @endforeach
+                    </select>
+                    <small style="color: #666; display: block; margin-top: 4px;">Laissez vide pour afficher tous les
+                        articles.</small>
+                </div>
+
+                <button type="submit" id="submitBtn">Ajouter</button>
+            </form>
+
+            <div id="postsSection">
+                <h3>Articles disponibles (cliquez pour ajouter)</h3>
+                @if (count($availableSlugs) > 0)
+                    <div class="available-slugs-grid">
+                        @foreach ($availableSlugs as $slug)
+                            <div class="slug-card post-card" data-type="post"
+                                onclick="fillForm('{{ addslashes($slug['title']) }}', '{{ $slug['slug'] }}', '{{ $slug['type'] }}')">
+                                <div class="slug-title">{{ $slug['title'] }}</div>
+                                <div class="slug-info">
+                                    <span class="slug-path">/{{ $slug['slug'] }}</span>
+                                    <span class="slug-type badge-{{ $slug['type'] }}">{{ $slug['type'] }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="no-slugs">Tous les articles sont déjà dans le menu.</p>
+                @endif
+            </div>
+
+            <div id="categoriesSection" style="display: none;">
+                <h3>Catégories disponibles (cliquez pour ajouter)</h3>
+                @if (count($categoryCards) > 0)
+                    <div class="available-slugs-grid">
+                        <div class="slug-card archive-card" data-type="archive" onclick="fillFormForAllPosts()">
+                            <div class="slug-title">Tous les articles</div>
+                            <div class="slug-info">
+                                <span class="slug-path">/posts</span>
+                                <span class="slug-type badge-archive">archive</span>
+                            </div>
+                        </div>
+                        @foreach ($categoryCards as $cat)
+                            <div class="slug-card archive-card" data-type="archive"
+                                onclick="fillFormForCategory('{{ addslashes($cat['name']) }}', '{{ $cat['slug'] }}', {{ $cat['id'] }})">
+                                <div class="slug-title">{{ $cat['name'] }}</div>
+                                <div class="slug-info">
+                                    <span class="slug-path">/posts/{{ $cat['slug'] }}</span>
+                                    <span class="slug-type badge-archive">archive</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="no-slugs">Aucune catégorie disponible.</p>
+                @endif
+            </div>
+        </div>
+
+        <div class="menu-list">
+            <h2>Éléments du menu</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Label</th>
+                        <th>Slug</th>
+                        <th>Type</th>
+                        <th>Visible</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($menuItems as $item)
+                        <tr>
+                            <td>{{ $item->getPosition() }}</td>
+                            <td>{{ $item->getLabel() }}</td>
+                            <td>{{ $item->getSlug() }}</td>
+                            <td>{{ $item->getType() }}</td>
+                            <td>
+                                <form method="POST" action="/admin/menu/{{ $item->getId() }}/toggle-visibility"
+                                    style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="submit">
+                                        {{ $item->getIsVisible() ? '✓ Visible' : '✗ Masqué' }}
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="POST" action="/admin/menu/{{ $item->getId() }}/move-up"
+                                    style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="submit">↑</button>
+                                </form>
+                                <form method="POST" action="/admin/menu/{{ $item->getId() }}/move-down"
+                                    style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="submit">↓</button>
+                                </form>
+                                <form method="POST" action="/admin/menu/{{ $item->getId() }}/delete"
+                                    style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="submit" onclick="return confirm('Supprimer cet élément ?')">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Slugs réservés
+        const reservedSlugs = ['contact', 'archive', 'login', 'register', 'logout', 'posts', 'admin'];
+
+        // Slugs déjà utilisés dans le menu
+        const usedMenuSlugs = [
+            @foreach ($menuItems as $item)
+                '{{ $item->getSlug() }}',
+            @endforeach
+        ];
+
+        function fillForm(label, slug, type) {
+            document.getElementById('label').value = label;
+            document.getElementById('slug').value = slug;
+            document.getElementById('type').value = type;
+            validateSlug();
+        }
+
+        function validateSlug() {
+            const slugInput = document.getElementById('slug');
+            const typeInput = document.getElementById('type');
+            const errorEl = document.getElementById('slug-error');
+            const warningEl = document.getElementById('slug-warning');
+            const submitBtn = document.getElementById('submitBtn');
+
+            const slug = slugInput.value.trim();
+            const type = typeInput.value;
+
+            errorEl.style.display = 'none';
+            warningEl.style.display = 'none';
+            submitBtn.disabled = false;
+
+            if (!slug) return;
+
+            // Vérifier si déjà dans le menu
+            if (usedMenuSlugs.includes(slug)) {
+                errorEl.textContent = '⚠️ Ce slug est déjà dans le menu';
+                errorEl.style.display = 'block';
+                submitBtn.disabled = true;
+                return;
+            }
+
+            // Vérifier si réservé (sauf pour les types qui peuvent utiliser des slugs réservés)
+            if (type !== 'post' && reservedSlugs.includes(slug)) {
+                errorEl.textContent = '⚠️ Ce slug est réservé pour une page système';
+                errorEl.style.display = 'block';
+                submitBtn.disabled = true;
+                return;
+            }
+
+            // Warning si slug réservé mais type post
+            if (type === 'post' && reservedSlugs.includes(slug)) {
+                warningEl.textContent = '⚠️ Attention : ce slug correspond à une page système, il y aura un conflit';
+                warningEl.style.display = 'block';
+            }
+        }
+
+        // Validation en temps réel
+        document.getElementById('slug').addEventListener('input', validateSlug);
+        document.getElementById('type').addEventListener('change', validateSlug);
+
+        // Validation à la soumission
+        document.getElementById('menuForm').addEventListener('submit', function(e) {
+            const slugInput = document.getElementById('slug');
+            const slug = slugInput.value.trim();
+
+            if (usedMenuSlugs.includes(slug)) {
+                e.preventDefault();
+                alert('Ce slug est déjà dans le menu');
+                return false;
+            }
+        });
+
+        // Toggle category select based on type
+        function toggleCategorySelect() {
+            const type = document.getElementById('type').value;
+            const categoryGroup = document.getElementById('categoryGroup');
+            const postsSection = document.getElementById('postsSection');
+            const categoriesSection = document.getElementById('categoriesSection');
+
+            if (type === 'archive') {
+                categoryGroup.style.display = 'block';
+                postsSection.style.display = 'none';
+                categoriesSection.style.display = 'block';
+            } else {
+                categoryGroup.style.display = 'none';
+                postsSection.style.display = 'block';
+                categoriesSection.style.display = 'none';
+                document.getElementById('category_id').value = '';
+            }
+        }
+
+        // Fill form for all posts
+        function fillFormForAllPosts() {
+            document.getElementById('label').value = 'Tous les articles';
+            document.getElementById('slug').value = 'posts';
+            document.getElementById('type').value = 'archive';
+            document.getElementById('category_id').value = '';
+            toggleCategorySelect();
+            validateSlug();
+        }
+
+        // Fill form for specific category
+        function fillFormForCategory(name, slug, categoryId) {
+            document.getElementById('label').value = name;
+            document.getElementById('slug').value = slug;
+            document.getElementById('type').value = 'archive';
+            document.getElementById('category_id').value = categoryId;
+            toggleCategorySelect();
+            validateSlug();
+        }
+
+        // Update label and slug when category is selected
+        function updateLabelAndSlugFromCategory() {
+            const categorySelect = document.getElementById('category_id');
+            const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+            const labelInput = document.getElementById('label');
+            const slugInput = document.getElementById('slug');
+
+            if (selectedOption.value === '') {
+                // Toutes les catégories
+                labelInput.value = 'Tous les articles';
+                slugInput.value = 'posts';
+            } else {
+                // Catégorie spécifique - utiliser le slug de la catégorie
+                const categoryName = selectedOption.getAttribute('data-name');
+                const categorySlug = selectedOption.getAttribute('data-slug');
+                labelInput.value = categoryName;
+                slugInput.value = categorySlug;
+            }
+
+            // Trigger validation
+            validateSlug();
+        }
+    </script>
+@endcomponent

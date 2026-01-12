@@ -1,37 +1,30 @@
 <?php
 
-// Seeder: User
-// Génère des données pour la table 'users'
-
 use Faker\Factory;
-use App\Infrastructure\Database\Database;
+use App\Domain\Entity\User;
 
 return function () {
     $faker = Factory::create();
-    $pdo = Database::getConnection();
-
     $count = 20;
 
-    // Créer l'utilisateur admin
-    $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([
-        'admin',
-        'admin',
-        'admin@admin.com',
-        password_hash('password', PASSWORD_DEFAULT),
-        'admin' // Rôle admin
+    $admin = new User([
+        'first_name' => 'admin',
+        'last_name' => 'admin',
+        'email' => 'admin@admin.com',
+        'password' => password_hash('password', PASSWORD_DEFAULT),
+        'role' => 'admin',
     ]);
+    $admin->save();
 
-    // Créer les utilisateurs normaux
     for ($i = 0; $i < $count; $i++) {
-        $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $faker->firstName(),
-            $faker->lastName(),
-            $faker->email(),
-            password_hash('password', PASSWORD_DEFAULT),
-            'user' // Rôle user
+        $user = new User([
+            'first_name' => $faker->firstName(),
+            'last_name' => $faker->lastName(),
+            'email' => $faker->email(),
+            'password' => password_hash('password', PASSWORD_DEFAULT),
+            'role' => 'user',
         ]);
+        $user->save();
     }
 
     echo "  ✓ {$count} users créés\n";

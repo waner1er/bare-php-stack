@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Service\Command;
 
 use App\Application\Service\Command\Interface\CommandInterface;
-
 use App\Application\Service\Command\Interface\OutputInterface;
 
 class MakeModelCommand implements CommandInterface
@@ -81,7 +80,7 @@ class MakeModelCommand implements CommandInterface
                 '3' => 'bool',
                 '4' => 'float',
                 '5' => 'text',
-                default => 'string'
+                default => 'string',
             };
 
             $textSize = null;
@@ -98,7 +97,7 @@ class MakeModelCommand implements CommandInterface
                     '2' => 'text',
                     '3' => 'mediumtext',
                     '4' => 'longtext',
-                    default => 'text'
+                    default => 'text',
                 };
             }
 
@@ -120,7 +119,7 @@ class MakeModelCommand implements CommandInterface
 
                     $foreignKeys[] = [
                         'column' => $propertyName,
-                        'references' => $referencedTable
+                        'references' => $referencedTable,
                     ];
                 }
             }
@@ -191,7 +190,11 @@ class {$className} extends Model
 PHP;
 
         file_put_contents($filePath, $template);
-        echo "Modèle $className créé dans src/Domain/Entity.\n";
+        echo "✓ Modèle $className créé dans src/Domain/Entity.\n";
+
+        // Créer automatiquement le repository interface et l'implémentation
+        $this->createRepositoryInterface($className);
+        $this->createRepositoryImplementation($className);
 
         if (!$createMigration) {
             echo "Voulez-vous générer une migration pour ce modèle ? (o/n) : ";
@@ -203,6 +206,14 @@ PHP;
 
         if ($createMigration) {
             $this->createMigration($className, $tableName, $properties, $foreignKeys);
+        }
+
+        echo "\n✅ Génération terminée avec succès !\n";
+        echo "  - Entity: src/Domain/Entity/{$className}.php\n";
+        echo "  - Repository Interface: src/Domain/Repository/{$className}RepositoryInterface.php\n";
+        echo "  - Repository Implementation: src/Infrastructure/Repository/{$className}Repository.php\n";
+        if ($createMigration) {
+            echo "  - Migration: migrations/files/*_create_{$tableName}_table.php\n";
         }
     }
 
@@ -231,9 +242,9 @@ PHP;
                     'tinytext' => 'TINYTEXT',
                     'mediumtext' => 'MEDIUMTEXT',
                     'longtext' => 'LONGTEXT',
-                    default => 'TEXT'
+                    default => 'TEXT',
                 },
-                default => 'VARCHAR(255)'
+                default => 'VARCHAR(255)',
             };
 
             if ($name === 'id') {
@@ -266,6 +277,108 @@ return "CREATE TABLE IF NOT EXISTS {$tableName} (
 PHP;
 
         file_put_contents($migrationFile, $migrationContent);
-        echo "Migration créée: migrations/files/" . basename($migrationFile) . "\n";
+        echo "✓ Migration créée: migrations/files/" . basename($migrationFile) . "\n";
+    }
+
+    private function createRepositoryInterface(string $className): void
+    {
+        $repositoryDir = DOMAIN_PATH . "/Repository";
+
+        if (!is_dir($repositoryDir)) {
+            mkdir($repositoryDir, 0755, true);
+        }
+
+        $interfaceFilePath = $repositoryDir . "/{$className}RepositoryInterface.php";
+
+        if (file_exists($interfaceFilePath)) {
+            echo "⚠ Le repository interface {$className}RepositoryInterface existe déjà.\n";
+            return;
+        }
+
+        $interfaceTemplate = <<<PHP
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Repository;
+
+use App\Domain\Entity\\{$className};
+
+interface {$className}RepositoryInterface
+{
+    public function find(int \$id): ?{$className};
+
+    public function findAll(): array;
+
+    public function save({$className} \${$this->toCamelCase($className)}): bool;
+
+    public function delete({$className} \${$this->toCamelCase($className)}): bool;
+}
+
+PHP;
+
+        file_put_contents($interfaceFilePath, $interfaceTemplate);
+        echo "✓ Repository Interface {$className}RepositoryInterface créé dans src/Domain/Repository.\n";
+    }
+
+    private function createRepositoryImplementation(string $className): void
+    {
+        $repositoryDir = INFRASTRUCTURE_PATH . "/Repository";
+
+        if (!is_dir($repositoryDir)) {
+            mkdir($repositoryDir, 0755, true);
+        }
+
+        $repositoryFilePath = $repositoryDir . "/{$className}Repository.php";
+
+        if (file_exists($repositoryFilePath)) {
+            echo "⚠ Le repository {$className}Repository existe déjà.\n";
+            return;
+        }
+
+        $camelCaseName = $this->toCamelCase($className);
+
+        $repositoryTemplate = <<<PHP
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\Repository;
+
+use App\Domain\Repository\\{$className}RepositoryInterface;
+use App\Domain\Entity\\{$className};
+
+class {$className}Repository implements {$className}RepositoryInterface
+{
+    public function find(int \$id): ?{$className}
+    {
+        return {$className}::find(\$id);
+    }
+
+    public function findAll(): array
+    {
+        return {$className}::all();
+    }
+
+    public function save({$className} \${$camelCaseName}): bool
+    {
+        return \${$camelCaseName}->save();
+    }
+
+    public function delete({$className} \${$camelCaseName}): bool
+    {
+        return \${$camelCaseName}->delete();
+    }
+}
+
+PHP;
+
+        file_put_contents($repositoryFilePath, $repositoryTemplate);
+        echo "✓ Repository {$className}Repository créé dans src/Infrastructure/Repository.\n";
+    }
+
+    private function toCamelCase(string $className): string
+    {
+        return lcfirst($className);
     }
 }
