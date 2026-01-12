@@ -41,6 +41,28 @@ class Router
                 ];
             }
         }
+
+        // Trier les routes : les plus spécifiques en premier
+        $this->sortRoutes();
+    }
+
+    /**
+     * Trie les routes par spécificité (routes fixes avant routes avec paramètres)
+     */
+    private function sortRoutes(): void
+    {
+        usort($this->routes, function ($a, $b) {
+            $aParams = substr_count($a['path'], '{');
+            $bParams = substr_count($b['path'], '{');
+
+            // Moins de paramètres = plus spécifique = vient en premier
+            if ($aParams !== $bParams) {
+                return $aParams <=> $bParams;
+            }
+
+            // À nombre de paramètres égal, route plus longue = plus spécifique
+            return strlen($b['path']) <=> strlen($a['path']);
+        });
     }
 
     public function dispatch(string $uri, string $httpMethod = 'GET'): void
