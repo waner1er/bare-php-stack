@@ -21,7 +21,8 @@
         "fakerphp/faker": "^1.24",
         "illuminate/view": "^11.0",
         "illuminate/events": "^11.0",
-        "illuminate/filesystem": "^11.0"
+        "illuminate/filesystem": "^11.0",
+        "tracy/tracy": "^2.11"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.92"

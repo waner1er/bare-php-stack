@@ -9,35 +9,32 @@ require __DIR__ . '/../src/Infrastructure/Utils/helpers.php';
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
-use App\Infrastructure\Utils\Debug;
+use Tracy\Debugger;
 use App\Infrastructure\Router\Router;
 use App\Infrastructure\Session\Session;
-use App\Interface\FrontEnd\Controller\AuthController;
-use App\Interface\FrontEnd\Controller\PostController;
-use App\Interface\FrontEnd\Controller\HomeController;
-use App\Interface\FrontEnd\Controller\ContactController;
-use App\Interface\Admin\Controller\BackOfficeController;
-use App\Interface\Admin\Controller\PostAdminController;
-use App\Interface\Admin\Controller\MenuAdminController;
+use App\Infrastructure\Router\ControllerLoader;
 
 Session::start();
 
-if (isset($_ENV['APP_DEBUG']) && $_ENV['APP_DEBUG'] === 'true') {
-    Debug::enable();
+if ($_ENV['APP_DEBUG'] === 'true') {
+    Debugger::enable(Debugger::Development, LOGS_PATH);
+    Debugger::$strictMode = true; // Mode strict pour le développement
+    Debugger::$showBar = true; // Forcer l'affichage de la barre
+
+
 } else {
-    Debug::disable();
+    Debugger::enable(Debugger::Production, LOGS_PATH);
 }
 
 $router = new Router();
-$router->registerController(HomeController::class);
-$router->registerController(ContactController::class);
-$router->registerController(AuthController::class);
-$router->registerController(BackOfficeController::class);
-$router->registerController(PostAdminController::class);
-$router->registerController(MenuAdminController::class);
-$router->registerController(PostController::class);
 
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$method = $_SERVER['REQUEST_METHOD'];
+$loader = new ControllerLoader($router);
+$loader->addPath(INTERFACE_PATH . '/FrontEnd/Controller');
+$loader->addPath(INTERFACE_PATH . '/Admin/Controller');
+$loader->addPath(INTERFACE_PATH . '/API');
+$loader->loadControllers();
+
+$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 $router->dispatch($uri, $method);
