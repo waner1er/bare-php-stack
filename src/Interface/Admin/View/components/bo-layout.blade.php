@@ -7,6 +7,7 @@
     <title>Back Office - Admin</title>
     <link rel="stylesheet" href="/dist/css/admin-style.css">
     <link rel="stylesheet" href="/dist/css/common-style.css">
+    <link rel="stylesheet" href="/dist/css/admin.css">
 </head>
 
 <body class="admin-layout">
@@ -21,10 +22,10 @@
                 <span class="admin-sidebar__icon">📊</span>
                 <span class="admin-sidebar__text">Dashboard</span>
             </a>
-            <a href="/admin/posts"
-                class="admin-sidebar__link {{ str_contains($_SERVER['REQUEST_URI'], '/admin/posts') ? 'admin-sidebar__link--active' : '' }}">
-                <span class="admin-sidebar__icon">📝</span>
-                <span class="admin-sidebar__text">Articles</span>
+            <a href="/admin/crud/posts"
+                class="admin-sidebar__link {{ str_contains($_SERVER['REQUEST_URI'], '/admin/crud/posts') ? 'admin-sidebar__link--active' : '' }}">
+                <span class="admin-sidebar__icon">📋</span>
+                <span class="admin-sidebar__text">Posts</span>
             </a>
             <a href="/admin/menu"
                 class="admin-sidebar__link {{ str_contains($_SERVER['REQUEST_URI'], '/admin/menu') ? 'admin-sidebar__link--active' : '' }}">

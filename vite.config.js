@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import { resolve } from "path";
 
 export default defineConfig({
+  publicDir: false, // Désactive le dossier public par défaut car outDir est dans public
   build: {
     outDir: "public/dist",
     emptyOutDir: true,
@@ -19,6 +20,16 @@ export default defineConfig({
         "admin-style": resolve(
           __dirname,
           "src/Interface/Admin/Assets/scss/admin.scss"
+        ),
+
+        // Admin CRUD
+        "admin-crud": resolve(
+          __dirname,
+          "src/Interface/Admin/Assets/Common/js/crud.js"
+        ),
+        "admin-crud-style": resolve(
+          __dirname,
+          "src/Interface/Admin/Assets/Common/scss/crud.scss"
         ),
 
         // Common (partagé)
