@@ -23,7 +23,7 @@
         color: white;
 
         &:hover:not(:disabled) {
-            background: darken($admin-primary, 10%);
+            background: color.adjust($admin-primary, $lightness: -10%);
         }
     }
 
@@ -32,7 +32,7 @@
         color: white;
 
         &:hover:not(:disabled) {
-            background: darken(#6b7280, 10%);
+            background: color.adjust(#6b7280, $lightness: -10%);
         }
     }
 
@@ -41,7 +41,7 @@
         color: white;
 
         &:hover:not(:disabled) {
-            background: darken($admin-secondary, 10%);
+            background: color.adjust($admin-secondary, $lightness: -10%);
         }
     }
 
@@ -50,7 +50,7 @@
         color: white;
 
         &:hover:not(:disabled) {
-            background: darken($admin-danger, 10%);
+            background: color.adjust($admin-danger, $lightness: -10%);
         }
     }
 
@@ -59,7 +59,7 @@
         color: white;
 
         &:hover:not(:disabled) {
-            background: darken($admin-warning, 10%);
+            background: color.adjust($admin-warning, $lightness: -10%);
         }
     }
 

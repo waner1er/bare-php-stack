@@ -14,6 +14,7 @@ use App\Application\Service\Command\SessionCleanCommand;
 use App\Application\Service\Command\MakeComponentCommand;
 use App\Application\Service\Command\DatabaseCreateCommand;
 use App\Application\Service\Command\MakeControllerCommand;
+use App\Application\Service\Command\MakeCrudCommand;
 
 class MinorCli
 {
@@ -30,6 +31,7 @@ class MinorCli
             'make:controller' => new MakeControllerCommand($this->output),
             'make:component'  => new MakeComponentCommand($this->output),
             'make:seeder'     => new MakeSeederCommand($this->output),
+            'make:crud'       => new MakeCrudCommand($this->output),
             'db:create'       => new DatabaseCreateCommand($this->output, $this->env),
             'db:drop'         => new DatabaseDropCommand($this->output, $this->env),
             'migrate'         => new MigrateCommand($this->output),
