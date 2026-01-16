@@ -1,0 +1,11 @@
+.comp-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.comp-col { padding: .5rem; box-sizing: border-box; }
+.comp-col--left {}
+.comp-col--right {}
+.comp-title { margin: 0 0 .5rem 0;}
+.comp-image { max-width: 100%; height: auto; display: block; border-radius: 4px; }

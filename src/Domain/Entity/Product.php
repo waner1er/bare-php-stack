@@ -1,16 +1,16 @@
 <?php
-        
+
 declare(strict_types=1);
-        
+
 namespace App\Domain\Entity;
-        
+
 use App\Domain\Abstract\Model;
-        
+
 class Product extends Model
 {
     protected static string $table = 'products';
     protected static string $primaryKey = 'id';
-        
+
     public int $id;
     public string $title;
     public float $price;
@@ -55,4 +55,3 @@ class Product extends Model
     }
 
 }
-        

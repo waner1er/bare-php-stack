@@ -69,7 +69,7 @@ class MakeCrudCommand implements CommandInterface
             $entityName,
             $crudClassName,
             $inputsCode,
-            $columnsCode
+            $columnsCode,
         );
 
         if (!is_dir(dirname($crudFilePath))) {
@@ -95,7 +95,7 @@ class MakeCrudCommand implements CommandInterface
             'string' => strlen($propertyName) > 50 || str_contains($propertyName, 'content') || str_contains($propertyName, 'description')
                 ? "(new TextareaInput('{$propertyName}', '{$label}'))->setRequired(true),"
                 : "(new TextInput('{$propertyName}', '{$label}'))->setRequired(true),",
-            default => "(new TextInput('{$propertyName}', '{$label}')),"
+            default => "(new TextInput('{$propertyName}', '{$label}')),",
         };
     }
 
@@ -107,7 +107,7 @@ class MakeCrudCommand implements CommandInterface
         return match ($typeString) {
             'int' => "new NumberColumn('{$propertyName}', '{$label}'),",
             'bool' => "new BooleanColumn('{$propertyName}', '{$label}'),",
-            default => "(new TextColumn('{$propertyName}', '{$label}'))->setLimit(50),"
+            default => "(new TextColumn('{$propertyName}', '{$label}'))->setLimit(50),",
         };
     }
 
@@ -115,7 +115,7 @@ class MakeCrudCommand implements CommandInterface
         string $entityName,
         string $className,
         string $inputsCode,
-        string $columnsCode
+        string $columnsCode,
     ): string {
         $plural = strtolower($entityName) . 's';
 

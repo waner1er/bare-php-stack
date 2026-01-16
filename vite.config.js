@@ -2,42 +2,37 @@ import { defineConfig } from "vite";
 import { resolve } from "path";
 
 export default defineConfig({
-  publicDir: false, // Désactive le dossier public par défaut car outDir est dans public
+  publicDir: false,
   build: {
     outDir: "public/dist",
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        // FrontEnd
         frontend: resolve(__dirname, "src/Interface/FrontEnd/Assets/js/app.js"),
         "frontend-style": resolve(
           __dirname,
           "src/Interface/FrontEnd/Assets/scss/app.scss"
         ),
 
-        // Admin
         admin: resolve(__dirname, "src/Interface/Admin/Assets/js/admin.js"),
         "admin-style": resolve(
           __dirname,
           "src/Interface/Admin/Assets/scss/admin.scss"
         ),
-
-        // Admin CRUD
         "admin-crud": resolve(
           __dirname,
-          "src/Interface/Admin/Assets/Common/js/crud.js"
+          "src/Interface/Admin/Assets/js/crud.js"
         ),
         "admin-crud-style": resolve(
           __dirname,
-          "src/Interface/Admin/Assets/Common/scss/crud.scss"
+          "src/Interface/Admin/Assets/scss/pages/_crud.scss"
         ),
 
-        // Common (partagé)
-        common: resolve(__dirname, "src/Interface/Common/Assets/js/common.js"),
-        "common-style": resolve(
-          __dirname,
-          "src/Interface/Common/Assets/scss/common.scss"
-        ),
+        // common: resolve(__dirname, "src/Interface/Common/Assets/js/common.js"),
+        // "common-style": resolve(
+        //   __dirname,
+        //   "src/Interface/Common/Assets/scss/common.scss"
+        // ),
       },
       output: {
         entryFileNames: "js/[name].js",
@@ -59,5 +54,11 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: false,
+    host: true,
+    // Ensure the dev server watches source files under `src` (HMR)
+    watch: {
+      // ignore build outputs and node_modules but watch everything in src
+      ignored: ['**/node_modules/**', '**/public/**']
+    },
   },
 });

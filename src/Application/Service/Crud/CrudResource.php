@@ -119,8 +119,8 @@ abstract class CrudResource
     public function renderForm(?object $entity = null): string
     {
         $inputs = $this->inputs();
-
-        $html = '';
+        $leftHtml = '';
+        $rightHtml = '';
 
         /** @var InputInterface $input */
         foreach ($inputs as $input) {
@@ -134,8 +134,25 @@ abstract class CrudResource
                 }
                 $input->setValue($value);
             }
-            $html .= $input->render();
+
+            // Place WYSIWYG (TextareaInput with wysiwyg enabled) in the right column
+            $isWysiwyg = false;
+            if ($input instanceof \App\Application\Service\Crud\Input\TextareaInput) {
+                $isWysiwyg = method_exists($input, 'isWysiwyg') && $input->isWysiwyg();
+            }
+
+            if ($isWysiwyg) {
+                $rightHtml .= $input->render();
+            } else {
+                $leftHtml .= $input->render();
+            }
         }
+
+        $html = '';
+        $html .= '<div class="crud-form-grid">';
+        $html .= '<div class="crud-form-grid__left">' . $leftHtml . '</div>';
+        $html .= '<div class="crud-form-grid__right">' . $rightHtml . '</div>';
+        $html .= '</div>';
 
         $html .= '<div class="crud-form-actions">';
         $html .= '<button type="submit" class="crud-btn crud-btn-primary">Enregistrer</button>';
