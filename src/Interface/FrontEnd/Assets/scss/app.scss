@@ -12,7 +12,9 @@
 @import 'layout/header';
 @import 'layout/footer';
 
+
 // Components
+@import 'components/bare.scss';
 @import 'components/navigation';
 @import 'components/cards';
 @import 'components/buttons';

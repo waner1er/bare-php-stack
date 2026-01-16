@@ -2,7 +2,14 @@
     use App\Infrastructure\Session\Session;
 @endphp
 @component('components.bo-layout', ['pageTitle' => $title])
-    <link rel="stylesheet" href="/dist/css/admin-crud-style.css">
+    @php $isDev = getenv('APP_ENV') === 'development'; @endphp
+    @if ($isDev)
+        {{-- Load Vite dev server modules for HMR --}}
+        <script type="module" src="http://localhost:3000/src/Interface/Admin/Assets/js/admin.js"></script>
+        <script type="module" src="http://localhost:3000/src/Interface/Admin/Assets/js/crud.js"></script>
+    @else
+        <link rel="stylesheet" href="/dist/css/admin-crud-style.css">
+    @endif
 
     <div class="admin-page">
         <div class="admin-page__header">
@@ -52,5 +59,7 @@
         @endif
     </div>
 
-    <script type="module" src="/dist/js/admin-crud.js"></script>
+    @if (!$isDev)
+        <script type="module" src="/dist/js/admin-crud.js"></script>
+    @endif
 @endcomponent

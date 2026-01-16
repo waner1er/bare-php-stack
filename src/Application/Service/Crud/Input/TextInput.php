@@ -24,7 +24,7 @@ class TextInput extends AbstractInput
     public function render(): string
     {
         $required = $this->required ? 'required' : '';
-        $value = htmlspecialchars((string)$this->value);
+        $value = htmlspecialchars((string) $this->value);
         $attrs = $this->getAttributesString();
 
         return <<<HTML

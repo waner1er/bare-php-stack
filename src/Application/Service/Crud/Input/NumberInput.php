@@ -15,14 +15,14 @@ class NumberInput extends AbstractInput
     public function setMin(float $min): self
     {
         $this->min = $min;
-        $this->setAttribute('min', (string)$min);
+        $this->setAttribute('min', (string) $min);
         return $this;
     }
 
     public function setMax(float $max): self
     {
         $this->max = $max;
-        $this->setAttribute('max', (string)$max);
+        $this->setAttribute('max', (string) $max);
         return $this;
     }
 
@@ -57,7 +57,7 @@ class NumberInput extends AbstractInput
     public function render(): string
     {
         $required = $this->required ? 'required' : '';
-        $value = htmlspecialchars((string)($this->value ?? ''));
+        $value = htmlspecialchars((string) ($this->value ?? ''));
         $attrs = $this->getAttributesString();
 
         return <<<HTML

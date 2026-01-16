@@ -86,7 +86,7 @@ class CrudController extends BaseController
         $entities = $entityClass::all();
 
         $action = $_GET['action'] ?? 'list';
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
         if ($action === 'edit' && $id) {
             $entity = $entityClass::find($id);
@@ -139,7 +139,7 @@ class CrudController extends BaseController
 
         if ($id) {
             // Update - charger l'entité existante
-            $entity = $entityClass::find((int)$id);
+            $entity = $entityClass::find((int) $id);
             if (!$entity) {
                 Session::flash('error', 'Entité introuvable');
                 header("Location: /admin/crud/{$resource}");
@@ -212,17 +212,17 @@ class CrudController extends BaseController
             if (method_exists($entity, $setter)) {
                 // Convertir en booléen si nécessaire
                 if (in_array($key, $booleanFields)) {
-                    $value = (bool)(int)$value;
+                    $value = (bool) (int) $value;
                 }
                 // Convertir les champs numériques en int
                 if (in_array($key, $numberFields) && $value !== '' && $value !== null) {
-                    $value = (int)$value;
+                    $value = (int) $value;
                 }
                 // Convertir les champs _id en int ou null
                 if (str_ends_with($key, '_id') && ($value === '' || $value === '0')) {
                     $value = null;
                 } elseif (str_ends_with($key, '_id') && $value !== null) {
-                    $value = (int)$value;
+                    $value = (int) $value;
                 }
                 \Tracy\Debugger::barDump(['setter' => $setter, 'converted_value' => $value], 'Calling Setter');
                 $entity->$setter($value);

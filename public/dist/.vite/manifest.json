@@ -1,15 +1,4 @@
 {
-  "src/Interface/Admin/Assets/Common/js/crud.js": {
-    "file": "js/admin-crud.js",
-    "name": "admin-crud",
-    "src": "src/Interface/Admin/Assets/Common/js/crud.js",
-    "isEntry": true
-  },
-  "src/Interface/Admin/Assets/Common/scss/crud.scss": {
-    "file": "css/admin-crud-style.css",
-    "src": "src/Interface/Admin/Assets/Common/scss/crud.scss",
-    "isEntry": true
-  },
   "src/Interface/Admin/Assets/js/admin.js": {
     "file": "js/admin.js",
     "name": "admin",
@@ -20,23 +9,20 @@
       "css/admin-style.css"
     ]
   },
+  "src/Interface/Admin/Assets/js/crud.js": {
+    "file": "js/admin-crud.js",
+    "name": "admin-crud",
+    "src": "src/Interface/Admin/Assets/js/crud.js",
+    "isEntry": true
+  },
   "src/Interface/Admin/Assets/scss/admin.scss": {
     "file": "css/admin-style.css",
     "src": "src/Interface/Admin/Assets/scss/admin.scss",
     "isEntry": true
   },
-  "src/Interface/Common/Assets/js/common.js": {
-    "file": "js/common.js",
-    "name": "common",
-    "src": "src/Interface/Common/Assets/js/common.js",
-    "isEntry": true,
-    "css": [
-      "css/common-style.css"
-    ]
-  },
-  "src/Interface/Common/Assets/scss/common.scss": {
-    "file": "css/common-style.css",
-    "src": "src/Interface/Common/Assets/scss/common.scss",
+  "src/Interface/Admin/Assets/scss/pages/_crud.scss": {
+    "file": "css/admin-crud-style.css",
+    "src": "src/Interface/Admin/Assets/scss/pages/_crud.scss",
     "isEntry": true
   },
   "src/Interface/FrontEnd/Assets/js/app.js": {

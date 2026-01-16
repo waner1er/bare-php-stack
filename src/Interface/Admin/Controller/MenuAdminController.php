@@ -68,7 +68,7 @@ class MenuAdminController extends BaseController
         $label = $_POST['label'] ?? '';
         $slug = $_POST['slug'] ?? '';
         $type = $_POST['type'] ?? 'custom';
-        $categoryId = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : null;
+        $categoryId = !empty($_POST['category_id']) ? (int) $_POST['category_id'] : null;
 
         if (empty($label) || empty($slug)) {
             Session::flash('error', 'Le label et le slug sont obligatoires');

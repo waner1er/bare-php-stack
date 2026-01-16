@@ -1,4 +1,5 @@
 <?php
+
 // Vérifiez si un fichier a été envoyé
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $uploadDir = __DIR__ . '/uploads/';

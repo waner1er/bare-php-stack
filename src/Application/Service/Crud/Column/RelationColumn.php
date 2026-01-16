@@ -15,7 +15,7 @@ class RelationColumn implements ColumnInterface
         string $name,
         string $label,
         string $relationMethod,
-        string $displayAttribute = 'name'
+        string $displayAttribute = 'name',
     ) {
         $this->name = $name;
         $this->label = $label;
@@ -49,9 +49,9 @@ class RelationColumn implements ColumnInterface
                 if ($relatedEntity) {
                     $getter = 'get' . ucfirst($this->displayAttribute);
                     if (method_exists($relatedEntity, $getter)) {
-                        $displayValue = htmlspecialchars((string)$relatedEntity->$getter());
+                        $displayValue = htmlspecialchars((string) $relatedEntity->$getter());
                     } else {
-                        $displayValue = htmlspecialchars((string)$relatedEntity->{$this->displayAttribute});
+                        $displayValue = htmlspecialchars((string) $relatedEntity->{$this->displayAttribute});
                     }
                 } else {
                     $displayValue = '<em>N/A</em>';
@@ -60,7 +60,7 @@ class RelationColumn implements ColumnInterface
                 $displayValue = '<em>N/A</em>';
             }
         } else {
-            $displayValue = htmlspecialchars((string)$value);
+            $displayValue = htmlspecialchars((string) $value);
         }
 
         return "<td class=\"crud-table-cell\">{$displayValue}</td>";

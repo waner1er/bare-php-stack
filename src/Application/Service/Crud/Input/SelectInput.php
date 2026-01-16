@@ -41,9 +41,9 @@ class SelectInput extends AbstractInput
         $optionsHtml = '';
 
         foreach ($this->options as $key => $label) {
-            $selected = ((string)$key === (string)$this->value) ? 'selected' : '';
-            $keyEscaped = htmlspecialchars((string)$key);
-            $labelEscaped = htmlspecialchars((string)$label);
+            $selected = ((string) $key === (string) $this->value) ? 'selected' : '';
+            $keyEscaped = htmlspecialchars((string) $key);
+            $labelEscaped = htmlspecialchars((string) $label);
 
             $optionsHtml .= "<option value=\"{$keyEscaped}\" {$selected}>{$labelEscaped}</option>\n";
         }

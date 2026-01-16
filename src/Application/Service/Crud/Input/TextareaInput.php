@@ -6,7 +6,6 @@ namespace App\Application\Service\Crud\Input;
 
 use App\Application\Service\Crud\Input\AbstractInput;
 
-
 class TextareaInput extends AbstractInput
 {
     protected int $rows = 5;
@@ -70,7 +69,7 @@ class TextareaInput extends AbstractInput
     public function render(): string
     {
         $required = $this->required ? 'required' : '';
-        $value = htmlspecialchars((string)($this->value ?? ''));
+        $value = htmlspecialchars((string) ($this->value ?? ''));
         $attrs = $this->getAttributesString();
 
         $wysiwygAttr = $this->wysiwyg ? 'data-wysiwyg="1"' : '';
@@ -94,6 +93,11 @@ class TextareaInput extends AbstractInput
             >{$value}</textarea>
         </div>
         HTML;
+    }
+
+    public function isWysiwyg(): bool
+    {
+        return $this->wysiwyg;
     }
 
     protected function renderRequiredBadge(): string
