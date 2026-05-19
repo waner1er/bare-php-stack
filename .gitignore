@@ -4,6 +4,7 @@
 composer.lock
 .DS_Store
 *.log
+/.phpunit.cache/
 
 /migrations/files/*.php
 !/migrations/files/.gitkeep

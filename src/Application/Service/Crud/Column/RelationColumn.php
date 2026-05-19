@@ -40,8 +40,7 @@ class RelationColumn implements ColumnInterface
 
     public function renderCell($value): string
     {
-        // $value est l'entité parente, pas la valeur directe
-        // On doit récupérer la relation
+        // $value est l'entité parente (cf. CrudResource::renderTable), pas la valeur de la colonne
         if (is_object($value)) {
             $method = $this->relationMethod;
             if (method_exists($value, $method)) {

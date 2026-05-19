@@ -19,7 +19,6 @@ class ContactController extends BaseController
     public function submit(): void
     {
         // TODO: Implémenter l'envoi de message de contact
-        // Pour l'instant, on affiche juste un message de succès
 
         $name = $_POST['name'] ?? '';
         $email = $_POST['email'] ?? '';
@@ -37,7 +36,6 @@ class ContactController extends BaseController
             exit;
         }
 
-        // Simuler l'envoi (à remplacer par un vrai système d'email)
         $_SESSION['success'] = 'Votre message a été envoyé avec succès !';
         header('Location: /contact');
         exit;

@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use App\Application\Service\Command\MinorCli;
+use App\Interface\Cli\MinorCli;
 
 require __DIR__ . '/config/paths.php';
 require __DIR__ . '/vendor/autoload.php';

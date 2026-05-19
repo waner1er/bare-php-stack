@@ -1,22 +1,33 @@
+<button
+    type="button"
+    class="nav-toggle"
+    data-nav-toggle
+    aria-expanded="false"
+    aria-controls="primary-nav"
+    aria-label="Ouvrir le menu">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
 <nav>
-    <ul>
+    <ul id="primary-nav" class="nav-menu" data-nav-menu>
         @foreach ($menuItems as $item)
-            <li>
+            <li class="nav-menu__item">
                 @if (isset($item['route']))
-                    <a href="{{ route($item['route']) }}">{{ $item['label'] }}</a>
+                    <a class="nav-menu__link" href="{{ route($item['route']) }}">{{ $item['label'] }}</a>
                 @else
-                    <a href="{{ $item['url'] }}">{{ $item['label'] }}</a>
+                    <a class="nav-menu__link" href="{{ $item['url'] }}">{{ $item['label'] }}</a>
                 @endif
             </li>
         @endforeach
 
-        <li>
+        <li class="nav-menu__item">
             @if ($isAuthenticated)
-                <span>Bonjour {{ $user->getFirstName() }} !</span>
-                <a href="/logout">Déconnexion</a>
+                <span class="nav-menu__greeting">Bonjour {{ $user->getFirstName() }} !</span>
+                <a class="nav-menu__link" href="/logout">Déconnexion</a>
             @else
-                <a href="/login">Connexion</a>
-                <a href="/register">Inscription</a>
+                <a class="nav-menu__link" href="/login">Connexion</a>
+                <a class="nav-menu__link" href="/register">Inscription</a>
             @endif
         </li>
     </ul>

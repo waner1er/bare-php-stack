@@ -1,4 +1,5 @@
-// Button styles
+@use '../shared' as *;
+@use 'sass:color';
 
 .btn {
     display: inline-block;

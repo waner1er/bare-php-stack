@@ -4,39 +4,51 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
-use App\Domain\Repository\MenuItemRepositoryInterface;
 use App\Domain\Entity\MenuItem;
+use App\Domain\Repository\MenuItemRepositoryInterface;
+use App\Infrastructure\Persistence\AbstractRepository;
 
-class MenuItemRepository implements MenuItemRepositoryInterface
+class MenuItemRepository extends AbstractRepository implements MenuItemRepositoryInterface
 {
+    protected string $table = 'menuitems';
+    protected string $entityClass = MenuItem::class;
+
     public function find(int $id): ?MenuItem
     {
-        return MenuItem::find($id);
+        /** @var MenuItem|null */
+        return $this->findOneRaw($id);
     }
 
+    /** @return MenuItem[] */
     public function findAll(): array
     {
-        return MenuItem::all();
+        /** @var MenuItem[] */
+        return $this->findAllRaw();
     }
 
+    /** @return MenuItem[] */
     public function findVisible(): array
     {
-        return MenuItem::getVisibleItems();
+        $stmt = $this->db()->prepare(
+            'SELECT * FROM ' . $this->table . ' WHERE is_visible = 1 ORDER BY position ASC'
+        );
+        $stmt->execute();
+        return array_map(fn($row) => $this->hydrate($row), $stmt->fetchAll());
     }
 
     public function findByPosition(int $position): ?MenuItem
     {
-        $items = array_filter(MenuItem::all(), fn($item) => $item->getPosition() === $position);
-        return !empty($items) ? reset($items) : null;
+        /** @var MenuItem|null */
+        return $this->findOneBy('position', $position);
     }
 
     public function save(MenuItem $menuItem): bool
     {
-        return $menuItem->save();
+        return $this->persist($menuItem);
     }
 
     public function delete(MenuItem $menuItem): bool
     {
-        return $menuItem->delete();
+        return $this->remove($menuItem);
     }
 }

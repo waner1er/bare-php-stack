@@ -1,32 +1,27 @@
-@component('components.layout')
-    <div style="max-width: 400px; margin: 50px auto;">
-        <h1>Connexion</h1>
+@component('components.layout', ['pageTitle' => 'Connexion - Mon Portfolio'])
+    <div class="container auth-page">
+        <h1 class="page-title">Connexion</h1>
 
         @if (isset($error))
-            <div style="padding: 10px; background: #f8d7da; color: #721c24; border-radius: 4px; margin-bottom: 20px;">
-                {{ $error }}
-            </div>
+            <div class="alert alert--error">{{ $error }}</div>
         @endif
 
-        <form method="POST" action="/login">
+        <form class="form" method="POST" action="/login">
             {!! csrf_field() !!}
-            <div style="margin-bottom: 15px;">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" required style="width: 100%; padding: 8px;">
+            <div class="form__group">
+                <label class="form__label" for="email">Email</label>
+                <input class="form__input" type="email" name="email" id="email" required>
             </div>
 
-            <div style="margin-bottom: 15px;">
-                <label for="password">Mot de passe</label>
-                <input type="password" name="password" id="password" required style="width: 100%; padding: 8px;">
+            <div class="form__group">
+                <label class="form__label" for="password">Mot de passe</label>
+                <input class="form__input" type="password" name="password" id="password" required>
             </div>
 
-            <button type="submit"
-                style="width: 100%; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer;">
-                Se connecter
-            </button>
+            <button type="submit" class="btn btn--block">Se connecter</button>
         </form>
 
-        <p style="margin-top: 20px; text-align: center;">
+        <p class="auth-page__footer">
             Pas de compte ? <a href="/register">S'inscrire</a>
         </p>
     </div>

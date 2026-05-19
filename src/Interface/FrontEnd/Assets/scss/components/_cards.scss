@@ -1,4 +1,4 @@
-// Card styles
+@use '../shared' as *;
 
 .post-card {
     background: $white;
@@ -13,34 +13,53 @@
     }
 
     &__content {
-        padding: 25px;
+        padding: $spacing-md;
+
+        @include respond-to(md) {
+            padding: 25px;
+        }
     }
 
     &__category {
         display: inline-block;
         background: $primary-color;
         color: $white;
-        padding: 5px 15px;
+        padding: 4px 12px;
         border-radius: 20px;
-        font-size: 0.85rem;
-        margin-bottom: $spacing-md;
+        font-size: 0.8rem;
+        margin-bottom: $spacing-sm;
+
+        @include respond-to(md) {
+            padding: 5px 15px;
+            font-size: 0.85rem;
+            margin-bottom: $spacing-md;
+        }
     }
 
     &__title {
-        font-size: 1.5rem;
-        margin-bottom: $spacing-md;
+        font-size: 1.25rem;
+        margin-bottom: $spacing-sm;
         color: $text-color;
+
+        @include respond-to(md) {
+            font-size: 1.5rem;
+            margin-bottom: $spacing-md;
+        }
     }
 
     &__excerpt {
         color: $gray-dark;
-        margin-bottom: $spacing-lg;
+        margin-bottom: $spacing-md;
+
+        @include respond-to(md) {
+            margin-bottom: $spacing-lg;
+        }
     }
 }
 
 .post-item {
     background: $white;
-    padding: 30px;
+    padding: $spacing-md;
     border-radius: $border-radius;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: $transition-base;
@@ -52,36 +71,66 @@
 
     &__header {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: flex-start;
-        margin-bottom: $spacing-lg;
+        gap: $spacing-xs;
+        margin-bottom: $spacing-md;
+
+        @include respond-to(md) {
+            flex-direction: row;
+            justify-content: space-between;
+            margin-bottom: $spacing-lg;
+        }
     }
 
     &__title {
-        font-size: 1.8rem;
+        font-size: 1.25rem;
         color: $text-color;
         margin-bottom: $spacing-xs;
+
+        @include respond-to(md) {
+            font-size: 1.8rem;
+        }
     }
 
     &__category {
         display: inline-block;
         background: $primary-color;
         color: $white;
-        padding: 5px 15px;
+        padding: 4px 12px;
         border-radius: 20px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+
+        @include respond-to(md) {
+            padding: 5px 15px;
+            font-size: 0.85rem;
+        }
     }
 
     &__excerpt {
         color: $gray-dark;
-        margin-bottom: $spacing-lg;
-        line-height: 1.8;
+        margin-bottom: $spacing-md;
+        line-height: 1.7;
+
+        @include respond-to(md) {
+            margin-bottom: $spacing-lg;
+            line-height: 1.8;
+        }
     }
 
     &__meta {
         display: flex;
-        gap: $spacing-md;
+        flex-wrap: wrap;
+        gap: $spacing-sm;
         color: $gray-dark;
         font-size: 0.9rem;
+
+        @include respond-to(md) {
+            gap: $spacing-md;
+        }
+    }
+
+    @include respond-to(md) {
+        padding: 30px;
     }
 }

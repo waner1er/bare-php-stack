@@ -18,6 +18,9 @@ interface PostRepositoryInterface
 
     public function findMenuItems(): array;
 
+    /** @return array<int, int> map categoryId => count */
+    public function countByCategory(): array;
+
     public function save(Post $post): bool;
 
     public function delete(Post $post): bool;

@@ -4,23 +4,27 @@ declare(strict_types=1);
 
 namespace App\Interface\FrontEnd\Component;
 
+use App\Domain\Repository\CategoryRepositoryInterface;
+use App\Domain\Repository\MenuItemRepositoryInterface;
 use App\Infrastructure\Auth\Auth;
 use App\Infrastructure\Blade\Blade;
-use App\Domain\Entity\MenuItem;
+use App\Infrastructure\Repository\CategoryRepository;
+use App\Infrastructure\Repository\MenuItemRepository;
 
 class NavMenu
 {
     private array $menuItems = [];
 
-    public function __construct(array $data = [])
-    {
+    public function __construct(
+        private MenuItemRepositoryInterface $menuItemRepository = new MenuItemRepository(),
+        private CategoryRepositoryInterface $categoryRepository = new CategoryRepository(),
+    ) {
         $this->buildMenu();
     }
 
     private function buildMenu(): void
     {
-        // Récupérer les items de menu visibles depuis la table menu_items
-        $menuItems = MenuItem::getVisibleItems();
+        $menuItems = $this->menuItemRepository->findVisible();
 
         $this->menuItems = [];
         foreach ($menuItems as $item) {
@@ -29,22 +33,18 @@ class NavMenu
             $categoryId = $item->getCategoryId();
             $entityType = $item->getEntityType();
 
-            // Générer l'URL en fonction du type
             if ($type === 'archive') {
-                $entityPath = strtolower($entityType) . 's'; // Post -> posts, Product -> products
+                $entityPath = strtolower($entityType) . 's';
 
                 if ($categoryId) {
-                    // Archive avec catégorie spécifique : /posts/{category-slug} ou /products/{category-slug}
-                    $category = \App\Domain\Entity\Category::find($categoryId);
+                    $category = $this->categoryRepository->find($categoryId);
                     $url = $category ? '/' . $entityPath . '/' . $category->getSlug() : '/' . $entityPath;
                 } else {
-                    // Archive sans catégorie : /posts (tous les items)
                     $url = '/' . $entityPath;
                 }
             } else {
-                // Pour les items individuels
                 $url = match ($type) {
-                    'post' => '/' . $slug,  // Posts dans le menu = URL à la racine
+                    'post' => '/' . $slug,
                     'static' => $slug === 'accueil' ? '/' : '/' . $slug,
                     default => '/' . $slug,
                 };

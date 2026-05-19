@@ -13,17 +13,17 @@ abstract class CrudResource
     protected string $title;
     protected string $singularTitle;
 
-    /**
-     * Définir les colonnes pour la vue en liste
-     * @return ColumnInterface[]
-     */
+    /** @return ColumnInterface[] */
     abstract public function columns(): array;
 
-    /**
-     * Définir les champs du formulaire
-     * @return InputInterface[]
-     */
+    /** @return InputInterface[] */
     abstract public function inputs(): array;
+
+    /**
+     * Repository qui persiste les entités du CRUD.
+     * Contrat utilisé par CrudController : find(int), findAll(), save($entity), delete($entity).
+     */
+    abstract public function repository(): object;
 
     public function getEntityClass(): string
     {
@@ -58,9 +58,6 @@ abstract class CrudResource
         return $errors;
     }
 
-    /**
-     * Génère le HTML du tableau de liste
-     */
     public function renderTable(array $entities): string
     {
         $columns = $this->columns();
@@ -81,11 +78,9 @@ abstract class CrudResource
             $html .= '<tr>';
             /** @var ColumnInterface $column */
             foreach ($columns as $column) {
-                // Pour les RelationColumn, passer l'entité complète
                 if ($column instanceof \App\Application\Service\Crud\Column\RelationColumn) {
                     $html .= $column->renderCell($entity);
                 } else {
-                    // Pour les autres colonnes, récupérer la valeur de la propriété
                     $property = $column->getName();
                     $getter = 'get' . ucfirst($property);
                     if (method_exists($entity, $getter)) {
@@ -113,9 +108,6 @@ abstract class CrudResource
         return $html;
     }
 
-    /**
-     * Génère le HTML du formulaire (sans balises form, géré par la vue)
-     */
     public function renderForm(?object $entity = null): string
     {
         $inputs = $this->inputs();
@@ -135,7 +127,6 @@ abstract class CrudResource
                 $input->setValue($value);
             }
 
-            // Place WYSIWYG (TextareaInput with wysiwyg enabled) in the right column
             $isWysiwyg = false;
             if ($input instanceof \App\Application\Service\Crud\Input\TextareaInput) {
                 $isWysiwyg = method_exists($input, 'isWysiwyg') && $input->isWysiwyg();
