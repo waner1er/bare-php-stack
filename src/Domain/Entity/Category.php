@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use App\Domain\Abstract\Model;
-
-class Category extends Model
+class Category
 {
-    protected static string $table = 'categories';
-    protected static string $primaryKey = 'id';
-
     public int $id;
     public string $name;
     public string $slug;
@@ -63,15 +58,5 @@ class Category extends Model
     public function setDescription(?string $description): void
     {
         $this->description = $description;
-    }
-
-    public function getPosts(): array
-    {
-        return Post::getByCategory($this->id);
-    }
-
-    public function getPostCount(): int
-    {
-        return count($this->getPosts());
     }
 }

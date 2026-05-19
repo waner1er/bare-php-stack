@@ -18,7 +18,7 @@
 <body>
     <header class="site-header">
         <div class="site-header__container">
-            <div class="site-header__logo">Mon Portfolio</div>
+            <a href="{{ route('home') }}" class="site-header__logo">Mon Portfolio</a>
             {!! $navMenu->render() !!}
         </div>
     </header>

@@ -1,10 +1,12 @@
 <?php
 
-use Faker\Factory;
 use App\Domain\Entity\User;
+use App\Infrastructure\Repository\UserRepository;
+use Faker\Factory;
 
 return function () {
     $faker = Factory::create();
+    $repository = new UserRepository();
     $count = 20;
 
     $admin = new User([
@@ -14,7 +16,7 @@ return function () {
         'password' => password_hash('password', PASSWORD_DEFAULT),
         'role' => 'admin',
     ]);
-    $admin->save();
+    $repository->save($admin);
 
     for ($i = 0; $i < $count; $i++) {
         $user = new User([
@@ -24,8 +26,8 @@ return function () {
             'password' => password_hash('password', PASSWORD_DEFAULT),
             'role' => 'user',
         ]);
-        $user->save();
+        $repository->save($user);
     }
 
-    echo "  ✓ {$count} users créés\n";
+    echo "  ✓ admin + {$count} users créés\n";
 };

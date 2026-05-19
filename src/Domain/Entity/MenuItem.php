@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use App\Domain\Abstract\Model;
-
-class MenuItem extends Model
+class MenuItem
 {
-    protected static string $table = 'menuitems';
-    protected static string $primaryKey = 'id';
-
     public int $id;
     public string $label;
     public string $slug;
@@ -111,13 +106,5 @@ class MenuItem extends Model
     public function setCategoryId(?int $category_id): void
     {
         $this->category_id = $category_id;
-    }
-
-    public static function getVisibleItems(): array
-    {
-        $items = static::all();
-        $visibleItems = array_filter($items, fn($item) => $item->getIsVisible());
-        usort($visibleItems, fn($a, $b) => $a->getPosition() <=> $b->getPosition());
-        return $visibleItems;
     }
 }

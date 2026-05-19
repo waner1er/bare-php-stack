@@ -4,29 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use App\Domain\Abstract\Model;
-use App\Domain\Contract\SlugResourceInterface;
-
-class Post extends Model implements SlugResourceInterface
+class Post
 {
-    /**
-     * Retourne tous les slugs de posts à afficher dans le menu
-     * @return array<int, array{slug: string, title: string, type: string}>
-     */
-    public static function getAllSlugsForMenu(): array
-    {
-        return array_map(
-            fn($post) => [
-                'slug' => $post->getSlug(),
-                'title' => $post->getTitle(),
-                'type' => 'post',
-            ],
-            array_filter(static::all(), fn($post) => $post->getIsInMenu()),
-        );
-    }
-    protected static string $table = 'posts';
-    protected static string $primaryKey = 'id';
-
     public int $id;
     public string $title;
     public string $slug;
@@ -35,6 +14,9 @@ class Post extends Model implements SlugResourceInterface
     public ?int $category_id = null;
     public bool $is_in_menu = false;
     public int $menu_order = 0;
+
+    private ?User $user = null;
+    private ?Category $category = null;
 
     public function __construct(array $data = [])
     {
@@ -99,11 +81,6 @@ class Post extends Model implements SlugResourceInterface
         $this->user_id = $user_id;
     }
 
-    public function user(): ?User
-    {
-        return User::find($this->user_id);
-    }
-
     public function getIsInMenu(): bool
     {
         return $this->is_in_menu;
@@ -134,28 +111,23 @@ class Post extends Model implements SlugResourceInterface
         $this->category_id = $category_id;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
+    }
+
     public function getCategory(): ?Category
     {
-        if ($this->category_id === null) {
-            return null;
-        }
-        return Category::find($this->category_id);
+        return $this->category;
     }
 
-    public static function getMenuItems(): array
+    public function setCategory(?Category $category): void
     {
-        $posts = static::all();
-        $menuPosts = array_filter($posts, fn($post) => $post->getIsInMenu());
-        usort($menuPosts, fn($a, $b) => $a->getMenuOrder() <=> $b->getMenuOrder());
-        return $menuPosts;
-    }
-
-
-    public static function getByCategory(int $categoryId): array
-    {
-        $posts = static::all();
-        $filtered = array_filter($posts, fn($post) => $post->getCategoryId() === $categoryId);
-        usort($filtered, fn($a, $b) => $b->getId() <=> $a->getId());
-        return $filtered;
+        $this->category = $category;
     }
 }

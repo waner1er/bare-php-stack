@@ -1,28 +1,22 @@
-@use 'sass:color';
-
-// Variables
-@import 'variables';
-
-// Base styles
-@import 'base/reset';
-@import 'base/typography';
-@import 'base/utilities';
+// Base
+@use 'base/reset';
+@use 'base/typography';
+@use 'base/utilities';
 
 // Layout
-@import 'layout/header';
-@import 'layout/footer';
-
+@use 'layout/header';
+@use 'layout/footer';
 
 // Components
-@import 'components/bare.scss';
-@import 'components/navigation';
-@import 'components/cards';
-@import 'components/buttons';
-@import 'components/forms';
+@use 'components/bare';
+@use 'components/navigation';
+@use 'components/cards';
+@use 'components/buttons';
+@use 'components/forms';
 
 // Pages
-@import 'pages/home';
-@import 'pages/posts';
-@import 'pages/contact';
-@import 'pages/archive';
-@import 'pages/archive';
+@use 'pages/home';
+@use 'pages/posts';
+@use 'pages/contact';
+@use 'pages/archive';
+@use 'pages/auth';

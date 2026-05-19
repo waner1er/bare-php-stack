@@ -1,4 +1,4 @@
-// Header styles
+@use '../shared' as *;
 
 .site-header {
     background: $white;
@@ -10,15 +10,59 @@
     &__container {
         max-width: $breakpoint-xl;
         margin: 0 auto;
-        padding: $spacing-md $spacing-lg;
+        padding: $spacing-sm $spacing-md;
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        @include respond-to(md) {
+            padding: $spacing-md $spacing-lg;
+        }
     }
 
     &__logo {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-weight: 700;
         color: $primary-color;
+
+        @include respond-to(md) {
+            font-size: 1.5rem;
+        }
+    }
+}
+
+// Bouton hamburger (mobile)
+.nav-toggle {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    span {
+        display: block;
+        height: 2px;
+        background: $text-color;
+        border-radius: 1px;
+        transition: $transition-base;
+    }
+
+    &[aria-expanded="true"] span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+    &[aria-expanded="true"] span:nth-child(2) {
+        opacity: 0;
+    }
+    &[aria-expanded="true"] span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    @include respond-to(md) {
+        display: none;
     }
 }

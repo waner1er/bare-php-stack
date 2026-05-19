@@ -4,14 +4,28 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Auth;
 
-use App\Infrastructure\Session\Session;
 use App\Domain\Entity\User;
+use App\Domain\Repository\UserRepositoryInterface;
+use App\Infrastructure\Repository\UserRepository;
+use App\Infrastructure\Session\Session;
 
 class Auth
 {
+    private static ?UserRepositoryInterface $userRepository = null;
+
+    public static function setUserRepository(UserRepositoryInterface $repository): void
+    {
+        self::$userRepository = $repository;
+    }
+
+    private static function users(): UserRepositoryInterface
+    {
+        return self::$userRepository ??= new UserRepository();
+    }
+
     public static function attempt(string $email, string $password): bool
     {
-        $user = User::findByEmail($email);
+        $user = self::users()->findByEmail($email);
 
         if (!$user || !password_verify($password, $user->password)) {
             return false;
@@ -31,7 +45,7 @@ class Auth
         }
 
         $userId = Session::get('user_id');
-        return User::find($userId);
+        return self::users()->find((int) $userId);
     }
 
     public static function check(): bool
@@ -52,7 +66,9 @@ class Auth
 
     public static function register(string $firstName, string $lastName, string $email, string $password): bool
     {
-        if (User::findByEmail($email)) {
+        $users = self::users();
+
+        if ($users->findByEmail($email)) {
             return false;
         }
 
@@ -65,7 +81,7 @@ class Auth
             'role' => 'user',
         ]);
 
-        $result = $user->save();
+        $result = $users->save($user);
 
         if ($result) {
             Session::set('user_id', $user->getId());

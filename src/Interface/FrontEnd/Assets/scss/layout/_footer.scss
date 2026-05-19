@@ -1,11 +1,16 @@
-// Footer styles
+@use '../shared' as *;
 
 .site-footer {
     background: $text-color;
     color: $white;
-    padding: $spacing-xl $spacing-lg;
+    padding: $spacing-lg $spacing-md;
     text-align: center;
-    margin-top: $spacing-xl;
+    margin-top: $spacing-lg;
+
+    @include respond-to(md) {
+        padding: $spacing-xl $spacing-lg;
+        margin-top: $spacing-xl;
+    }
 
     &__text {
         opacity: 0.9;

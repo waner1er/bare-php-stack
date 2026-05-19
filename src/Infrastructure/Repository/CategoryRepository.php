@@ -4,33 +4,41 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
-use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Entity\Category;
+use App\Domain\Repository\CategoryRepositoryInterface;
+use App\Infrastructure\Persistence\AbstractRepository;
 
-class CategoryRepository implements CategoryRepositoryInterface
+class CategoryRepository extends AbstractRepository implements CategoryRepositoryInterface
 {
+    protected string $table = 'categories';
+    protected string $entityClass = Category::class;
+
     public function find(int $id): ?Category
     {
-        return Category::find($id);
+        /** @var Category|null */
+        return $this->findOneRaw($id);
     }
 
+    /** @return Category[] */
     public function findAll(): array
     {
-        return Category::all();
+        /** @var Category[] */
+        return $this->findAllRaw();
     }
 
     public function findBySlug(string $slug): ?Category
     {
-        return Category::findBySlug($slug);
+        /** @var Category|null */
+        return $this->findOneBy('slug', $slug);
     }
 
     public function save(Category $category): bool
     {
-        return $category->save();
+        return $this->persist($category);
     }
 
     public function delete(Category $category): bool
     {
-        return $category->delete();
+        return $this->remove($category);
     }
 }

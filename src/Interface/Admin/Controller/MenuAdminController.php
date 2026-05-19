@@ -21,6 +21,7 @@ class MenuAdminController extends BaseController
     public function __construct(
         private MenuItemRepositoryInterface $menuItemRepository = new MenuItemRepository(),
         private CategoryRepositoryInterface $categoryRepository = new CategoryRepository(),
+        private MenuManager $menuManager = new MenuManager(),
     ) {}
 
     #[Route('/admin/menu', 'GET')]
@@ -31,15 +32,11 @@ class MenuAdminController extends BaseController
         $menuItems = $this->menuItemRepository->findAll();
         usort($menuItems, fn($a, $b) => $a->getPosition() <=> $b->getPosition());
 
-        // Récupérer les slugs déjà utilisés dans le menu
         $currentMenuSlugs = array_map(fn($item) => $item->getSlug(), $menuItems);
-
-        // Récupérer uniquement les slugs disponibles non utilisés
-        $availableSlugs = MenuManager::getAvailableSlugs($currentMenuSlugs);
+        $availableSlugs = $this->menuManager->getAvailableSlugs($currentMenuSlugs);
 
         $categories = $this->categoryRepository->findAll();
 
-        // Préparer les données des catégories pour les cards
         $categoryCards = [];
         foreach ($categories as $category) {
             $categoryCards[] = [
@@ -76,7 +73,6 @@ class MenuAdminController extends BaseController
             exit;
         }
 
-        // Vérifier que le slug n'est pas déjà dans le menu
         $existingItems = $this->menuItemRepository->findAll();
         foreach ($existingItems as $item) {
             if ($item->getSlug() === $slug) {

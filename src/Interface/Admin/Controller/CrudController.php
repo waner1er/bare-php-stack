@@ -9,7 +9,6 @@ use App\Interface\Common\BaseController;
 use App\Infrastructure\Middleware\AdminMiddleware;
 use App\Infrastructure\Middleware\CsrfMiddleware;
 use App\Infrastructure\Session\Session;
-use App\Infrastructure\Database\Database;
 
 class CrudController extends BaseController
 {
@@ -39,7 +38,6 @@ class CrudController extends BaseController
             $fullClassName = "App\\Interface\\Admin\\Crud\\{$className}";
 
             if (class_exists($fullClassName)) {
-                // Extraire le nom de la resource (ex: PostResource -> posts)
                 $resourceName = strtolower(str_replace('Resource', '', $className)) . 's';
                 self::$resources[$resourceName] = $fullClassName;
             }
@@ -48,17 +46,11 @@ class CrudController extends BaseController
         self::$autoDiscovered = true;
     }
 
-    /**
-     * Enregistre un CrudResource manuellement
-     */
     public static function register(string $name, string $resourceClass): void
     {
         self::$resources[$name] = $resourceClass;
     }
 
-    /**
-     * Retourne tous les CRUD enregistrés
-     */
     public static function getResources(): array
     {
         self::autoDiscover();
@@ -80,24 +72,21 @@ class CrudController extends BaseController
 
         $resourceClass = self::$resources[$resource];
         $crudResource = new $resourceClass();
-
-        // Récupérer les entités
-        $entityClass = $crudResource->getEntityClass();
-        $entities = $entityClass::all();
+        $repository = $crudResource->repository();
 
         $action = $_GET['action'] ?? 'list';
         $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
         if ($action === 'edit' && $id) {
-            $entity = $entityClass::find($id);
+            $entity = $repository->find($id);
             $formHtml = $crudResource->renderForm($entity);
             $this->renderCrud($crudResource, $formHtml, $resource, 'edit', $id);
         } elseif ($action === 'create') {
             $formHtml = $crudResource->renderForm();
             $this->renderCrud($crudResource, $formHtml, $resource, 'create');
         } elseif ($action === 'delete' && $id) {
-            $entity = $entityClass::find($id);
-            if ($entity && $entity->delete()) {
+            $entity = $repository->find($id);
+            if ($entity && $repository->delete($entity)) {
                 Session::flash('success', 'Suppression effectuée avec succès');
             } else {
                 Session::flash('error', 'Erreur lors de la suppression');
@@ -105,6 +94,7 @@ class CrudController extends BaseController
             header("Location: /admin/crud/{$resource}");
             exit;
         } else {
+            $entities = $repository->findAll();
             $tableHtml = $crudResource->renderTable($entities);
             $this->renderCrud($crudResource, $tableHtml, $resource, 'list');
         }
@@ -116,7 +106,6 @@ class CrudController extends BaseController
         AdminMiddleware::handle();
         CsrfMiddleware::handle();
 
-        // Auto-découverte des resources
         self::autoDiscover();
 
         if (!isset(self::$resources[$resource])) {
@@ -126,20 +115,15 @@ class CrudController extends BaseController
 
         $resourceClass = self::$resources[$resource];
         $crudResource = new $resourceClass();
+        $repository = $crudResource->repository();
         $entityClass = $crudResource->getEntityClass();
-        $tableName = $this->getTableName($entityClass);
 
         $id = $_POST['id'] ?? null;
         $data = $_POST;
         unset($data['_token']);
 
-        // Debug avec Tracy
-        \Tracy\Debugger::barDump($data, 'POST Data');
-        \Tracy\Debugger::barDump($id, 'ID');
-
         if ($id) {
-            // Update - charger l'entité existante
-            $entity = $entityClass::find((int) $id);
+            $entity = $repository->find((int) $id);
             if (!$entity) {
                 Session::flash('error', 'Entité introuvable');
                 header("Location: /admin/crud/{$resource}");
@@ -147,11 +131,9 @@ class CrudController extends BaseController
             }
             unset($data['id']);
         } else {
-            // Create - nouvelle entité
             $entity = new $entityClass();
         }
 
-        // Récupérer tous les inputs pour détecter les booléens et valider
         $inputs = $crudResource->inputs();
         $booleanFields = [];
         $numberFields = [];
@@ -161,7 +143,6 @@ class CrudController extends BaseController
             $fieldName = $input->getName();
             $fieldValue = $data[$fieldName] ?? null;
 
-            // Vérifier si le champ est requis
             $reflection = new \ReflectionClass($input);
             $requiredProperty = $reflection->getProperty('required');
             $requiredProperty->setAccessible(true);
@@ -171,25 +152,22 @@ class CrudController extends BaseController
                 $errors[$fieldName] = "Le champ '{$input->getLabel()}' est requis";
             }
 
-            // Détecter les NumberInput
             if ($input instanceof \App\Application\Service\Crud\Input\NumberInput) {
                 $numberFields[] = $fieldName;
             }
 
-            // Détecter les SelectInput avec options 0/1 (booléens)
             if ($input instanceof \App\Application\Service\Crud\Input\SelectInput) {
                 $optionsProperty = $reflection->getProperty('options');
                 $optionsProperty->setAccessible(true);
                 $options = $optionsProperty->getValue($input);
 
-                // Si c'est un select avec [0 => 'Non', 1 => 'Oui'], c'est un booléen
+                // Select [0 => 'Non', 1 => 'Oui'] traité comme un booléen
                 if (isset($options[0]) && isset($options[1]) && count($options) === 2) {
                     $booleanFields[] = $fieldName;
                 }
             }
         }
 
-        // Si des erreurs de validation, rediriger avec les erreurs
         if (!empty($errors)) {
             Session::flash('error', 'Erreurs de validation :');
             Session::flash('validation_errors', $errors);
@@ -203,35 +181,26 @@ class CrudController extends BaseController
             exit;
         }
 
-        // Mise à jour des propriétés via les setters
         foreach ($data as $key => $value) {
-            // Convertir snake_case en camelCase pour le nom du setter
             $camelKey = str_replace('_', '', ucwords($key, '_'));
             $setter = 'set' . $camelKey;
-            \Tracy\Debugger::barDump(['key' => $key, 'value' => $value, 'setter' => $setter], 'Field Processing');
             if (method_exists($entity, $setter)) {
-                // Convertir en booléen si nécessaire
                 if (in_array($key, $booleanFields)) {
                     $value = (bool) (int) $value;
                 }
-                // Convertir les champs numériques en int
                 if (in_array($key, $numberFields) && $value !== '' && $value !== null) {
                     $value = (int) $value;
                 }
-                // Convertir les champs _id en int ou null
                 if (str_ends_with($key, '_id') && ($value === '' || $value === '0')) {
                     $value = null;
                 } elseif (str_ends_with($key, '_id') && $value !== null) {
                     $value = (int) $value;
                 }
-                \Tracy\Debugger::barDump(['setter' => $setter, 'converted_value' => $value], 'Calling Setter');
                 $entity->$setter($value);
-            } else {
-                \Tracy\Debugger::barDump($setter, 'Method does not exist');
             }
         }
 
-        // Mettre les champs booléens absents à false (checkbox non cochés)
+        // Checkbox non cochée = absent du POST, on force false
         foreach ($booleanFields as $boolField) {
             if (!isset($data[$boolField])) {
                 $setter = 'set' . ucfirst($boolField);
@@ -241,8 +210,7 @@ class CrudController extends BaseController
             }
         }
 
-        // Sauvegarder via la méthode save() de l'entité
-        if ($entity->save()) {
+        if ($repository->save($entity)) {
             Session::flash('success', 'Enregistrement effectué avec succès');
         } else {
             Session::flash('error', 'Erreur lors de l\'enregistrement');
@@ -264,9 +232,4 @@ class CrudController extends BaseController
         ]);
     }
 
-    private function getTableName(string $entityClass): string
-    {
-        $className = basename(str_replace('\\', '/', $entityClass));
-        return strtolower($className) . 's';
-    }
 }

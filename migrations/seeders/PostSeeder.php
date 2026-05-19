@@ -1,28 +1,21 @@
 <?php
 
 use App\Domain\Entity\Post;
-use App\Domain\Entity\User;
-use Faker\Factory;
+use App\Infrastructure\Repository\PostRepository;
+use App\Infrastructure\Repository\UserRepository;
 use App\Infrastructure\Utils\StringHelper;
+use Faker\Factory;
 
 return function () {
     $faker = Factory::create();
-    $userIds = array_map(fn($user) => $user->getId(), User::all());
+    $postRepository = new PostRepository();
+    $userRepository = new UserRepository();
+
+    $userIds = array_map(fn($user) => $user->getId(), $userRepository->findAll());
     if (empty($userIds)) {
         echo "  ⚠ Aucun utilisateur trouvé. Exécutez d'abord UserSeeder.\n";
         return;
     }
-
-    // // Créer le post de la page d'accueil
-    // $homePost = new Post([
-    //     'title' => 'Accueil',
-    //     'slug' => 'home',
-    //     'content' => '<h1>Bienvenue sur notre site</h1><p>Ceci est la page d\'accueil.</p>',
-    //     'user_id' => $userIds[0],
-    //     'is_in_menu' => 0,
-    //     'menu_order' => 0,
-    // ]);
-    // $homePost->save();
 
     $menuPages = [
         ['À propos', 'a-propos', '<h1>À propos de nous</h1><p>Découvrez notre histoire.</p>', 1],
@@ -39,11 +32,10 @@ return function () {
             'is_in_menu' => 1,
             'menu_order' => $page[3],
         ]);
-        $post->save();
+        $postRepository->save($post);
     }
 
     $count = 20;
-
     for ($i = 0; $i < $count; $i++) {
         $title = $faker->sentence(3);
         $post = new Post([
@@ -55,8 +47,8 @@ return function () {
             'category_id' => rand(1, 4),
             'menu_order' => 0,
         ]);
-        $post->save();
+        $postRepository->save($post);
     }
 
-    echo "  ✓ 1 post 'home' + 3 pages de menu + {$count} posts créés\n";
+    echo "  ✓ 3 pages de menu + {$count} posts créés\n";
 };

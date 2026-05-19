@@ -1,17 +1,31 @@
-// Import the SCSS
 import "../scss/app.scss";
 
-// FrontEnd JavaScript
-console.log("FrontEnd app loaded");
-
-// Navigation mobile toggle
 document.addEventListener("DOMContentLoaded", () => {
-  const mobileMenuToggle = document.querySelector("[data-mobile-menu-toggle]");
-  const mobileMenu = document.querySelector("[data-mobile-menu]");
+    const toggle = document.querySelector("[data-nav-toggle]");
+    const menu = document.querySelector("[data-nav-menu]");
 
-  if (mobileMenuToggle && mobileMenu) {
-    mobileMenuToggle.addEventListener("click", () => {
-      mobileMenu.classList.toggle("active");
+    if (!toggle || !menu) return;
+
+    const setOpen = (open) => {
+        toggle.setAttribute("aria-expanded", String(open));
+        menu.classList.toggle("is-open", open);
+    };
+
+    toggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = toggle.getAttribute("aria-expanded") !== "true";
+        setOpen(open);
     });
-  }
+
+    // Ferme au clic en dehors
+    document.addEventListener("click", (e) => {
+        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+            setOpen(false);
+        }
+    });
+
+    // Ferme à Echap
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") setOpen(false);
+    });
 });

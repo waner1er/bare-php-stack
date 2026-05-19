@@ -24,7 +24,7 @@
                 @foreach ($categories as $category)
                     <a href="/posts/{{ $category->getSlug() }}"
                         class="category-btn {{ $currentCategory && $currentCategory->getId() === $category->getId() ? 'category-btn--active' : '' }}">
-                        {{ $category->getName() }} ({{ $category->getPostCount() }})
+                        {{ $category->getName() }} ({{ $postCounts[$category->getId()] ?? 0 }})
                     </a>
                 @endforeach
             </div>

@@ -1,33 +1,40 @@
-// Contact page styles
+@use '../shared' as *;
 
 .contact-page {
     min-height: 70vh;
 }
 
-.page-title {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: $text-color;
-}
-
 .page-subtitle {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: $gray-dark;
-    margin-bottom: 50px;
+    margin-bottom: $spacing-lg;
+
+    @include respond-to(md) {
+        font-size: 1.2rem;
+        margin-bottom: 50px;
+    }
 }
 
 .contact-info {
     background: $white;
-    padding: 30px;
+    padding: $spacing-md;
     border-radius: $border-radius;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
+    margin-top: $spacing-md;
+
+    @include respond-to(md) {
+        padding: 30px;
+        margin-top: 30px;
+    }
 
     &__title {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         margin-bottom: $spacing-md;
+
+        @include respond-to(md) {
+            font-size: 1.5rem;
+        }
     }
 
     &__item {
@@ -36,20 +43,26 @@
         gap: $spacing-sm;
         margin-bottom: $spacing-sm;
         color: $gray-dark;
+        word-break: break-word;
     }
 }
 
 .alert {
-    padding: $spacing-md;
-    margin-bottom: $spacing-lg;
+    padding: $spacing-sm;
+    margin-bottom: $spacing-md;
     border-radius: $border-radius-sm;
-    
+
+    @include respond-to(md) {
+        padding: $spacing-md;
+        margin-bottom: $spacing-lg;
+    }
+
     &--success {
         background: #d4edda;
         color: #155724;
         border: 1px solid #c3e6cb;
     }
-    
+
     &--error {
         background: #f8d7da;
         color: #721c24;

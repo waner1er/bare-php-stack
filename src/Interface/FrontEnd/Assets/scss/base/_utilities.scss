@@ -1,16 +1,25 @@
-// Utility classes
+@use '../shared' as *;
 
 .container {
     max-width: $breakpoint-xl;
     margin: 0 auto;
-    padding: 60px 20px;
+    padding: $spacing-lg $spacing-sm;
+
+    @include respond-to(md) {
+        padding: $spacing-xl $spacing-lg;
+    }
 }
 
 .section-title {
     text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 50px;
+    font-size: 1.75rem;
+    margin-bottom: $spacing-lg;
     color: $text-color;
+
+    @include respond-to(md) {
+        font-size: 2.5rem;
+        margin-bottom: 50px;
+    }
 }
 
 .text-center {

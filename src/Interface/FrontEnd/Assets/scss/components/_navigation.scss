@@ -1,16 +1,37 @@
-// Navigation styles
+@use '../shared' as *;
 
 .nav-menu {
-    display: flex;
-    gap: $spacing-md;
+    // Mobile : panneau qui descend sous le header
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: $white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+    padding: $spacing-sm $spacing-md;
     list-style: none;
+    display: none;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    &.is-open {
+        display: flex;
+    }
 
     &__item {
         position: relative;
+
+        // Inline elements (Bonjour/Connexion/Déconnexion)
+        > span,
+        > a {
+            display: inline-block;
+        }
     }
 
-    &__link {
-        padding: $spacing-xs $spacing-md;
+    &__link,
+    a {
+        display: block;
+        padding: $spacing-xs $spacing-sm;
         color: $text-color;
         font-weight: 500;
         border-radius: $border-radius-sm;
@@ -23,6 +44,22 @@
         &--active {
             color: $primary-color;
             background: rgba($primary-color, 0.1);
+        }
+    }
+
+    // Desktop : barre horizontale
+    @include respond-to(md) {
+        position: static;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: $spacing-md;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+
+        a {
+            padding: $spacing-xs $spacing-sm;
         }
     }
 }
