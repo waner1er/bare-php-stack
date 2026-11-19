@@ -28,7 +28,6 @@ export default defineConfig({
           "src/Interface/Admin/Assets/scss/pages/_crud.scss"
         ),
 
-        // common: resolve(__dirname, "src/Interface/Common/Assets/js/common.js"),
         // "common-style": resolve(
         //   __dirname,
         //   "src/Interface/Common/Assets/scss/common.scss"

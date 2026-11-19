@@ -62,7 +62,7 @@ class TipTapInput extends AbstractInput
         $value = htmlspecialchars((string) ($this->value ?? ''));
         $attrs = $this->getAttributesString();
 
-        // Mark this textarea for the admin JS to initialize TipTap
+        // Repéré par le JS de l'admin pour initialiser l'éditeur
         $wysiwygAttr = 'data-wysiwyg="1"';
         $wysiwygType = 'data-wysiwyg-type="tiptap"';
 

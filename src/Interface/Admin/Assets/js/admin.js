@@ -15,8 +15,6 @@ import "tinymce/skins/ui/oxide/skin.css";
 import "tinymce/skins/ui/oxide/content.css";
 import "tinymce/skins/content/default/content.css";
 
-console.log("Admin panel loaded");
-
 document.addEventListener("DOMContentLoaded", () => {
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
@@ -45,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
     promotion: false,
     license_key: "gpl",
     skin: false,
-    // inject compiled page/_crud.scss (ensure this is built to /dist/css/admin-crud-style.css)
     content_css: "/dist/css/admin-crud-style.css",
     images_upload_url: "/admin/upload-image",
     automatic_uploads: true,

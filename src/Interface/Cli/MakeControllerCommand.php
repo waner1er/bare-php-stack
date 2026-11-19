@@ -10,7 +10,6 @@ class MakeControllerCommand implements CommandInterface
 {
     public function execute(?string $name, array $options = []): void
     {
-        // Demande du nom du contrôleur si non fourni
         if (empty($name)) {
             echo "Entrez le nom du contrôleur (préfixe avant 'Controller') : ";
             $name = trim(fgets(STDIN));
@@ -71,7 +70,6 @@ class MakeControllerCommand implements CommandInterface
         $methodsCode = "";
 
         if ($useRepository === 'o' || $useRepository === 'oui' || $useRepository === 'y' || $useRepository === 'yes') {
-            // Lister les modèles disponibles
             $entityPath = DOMAIN_PATH . "/Entity";
             $entities = [];
 

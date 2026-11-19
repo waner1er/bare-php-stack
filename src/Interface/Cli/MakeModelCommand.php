@@ -18,7 +18,6 @@ class MakeModelCommand implements CommandInterface
 
     public function execute(?string $name, array $options = []): void
     {
-        // Demander le nom du modèle si non fourni
         if (empty($name)) {
             echo "Entrez le nom du modèle : ";
             $name = trim(fgets(STDIN));

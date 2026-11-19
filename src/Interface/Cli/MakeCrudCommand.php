@@ -27,7 +27,6 @@ class MakeCrudCommand implements CommandInterface
         $entityName = ucfirst($name);
         $entityClass = "App\\Domain\\Entity\\{$entityName}";
 
-        // Vérifier que l'entité existe
         if (!class_exists($entityClass)) {
             $this->output->writeln("Erreur : L'entité {$entityName} n'existe pas dans Domain/Entity.");
             return;
@@ -52,7 +51,6 @@ class MakeCrudCommand implements CommandInterface
             $propertyName = $property->getName();
             $propertyType = $property->getType();
 
-            // Ignorer l'ID dans le formulaire
             if ($propertyName === 'id') {
                 $columns[] = $this->generateColumnCode($propertyName, $propertyType);
                 continue;

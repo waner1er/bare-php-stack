@@ -10,7 +10,6 @@ class MakeComponentCommand implements CommandInterface
 {
     public function execute(?string $name, array $options = []): void
     {
-        // Demande du nom du composant si non fourni
         if (empty($name)) {
             echo "Entrez le nom du composant : ";
             $name = trim(fgets(STDIN));
@@ -100,7 +99,6 @@ class {$className}
 {
     public function __construct(array \$data = [])
     {
-        // Initialiser les propriétés du composant
     }
 
     public function render(): string
@@ -110,7 +108,6 @@ class {$className}
         \$blade = new Blade(\$views, \$cache);
         
         return \$blade->render('components.{$componentName}', [
-            // Passer les données au template
         ]);
     }
 }

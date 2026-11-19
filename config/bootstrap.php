@@ -18,8 +18,8 @@ Session::start();
 
 if ($_ENV['APP_DEBUG'] === 'true') {
     Debugger::enable(Debugger::Development, LOGS_PATH);
-    Debugger::$strictMode = true; // Mode strict pour le développement
-    Debugger::$showBar = true; // Forcer l'affichage de la barre
+    Debugger::$strictMode = true;
+    Debugger::$showBar = true;
 
 
 } else {

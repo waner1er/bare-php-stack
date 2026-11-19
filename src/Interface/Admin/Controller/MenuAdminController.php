@@ -89,7 +89,6 @@ class MenuAdminController extends BaseController
             exit;
         }
 
-        // Calculer la position maximale + 1
         $items = $this->menuItemRepository->findAll();
         $maxPosition = 0;
         foreach ($items as $item) {

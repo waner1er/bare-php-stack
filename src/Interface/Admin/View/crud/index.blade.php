@@ -4,7 +4,7 @@
 @component('components.bo-layout', ['pageTitle' => $title])
     @php $isDev = getenv('APP_ENV') === 'development'; @endphp
     @if ($isDev)
-        {{-- Load Vite dev server modules for HMR --}}
+        {{-- Modules Vite en dev (HMR) --}}
         <script type="module" src="http://localhost:3000/src/Interface/Admin/Assets/js/admin.js"></script>
         <script type="module" src="http://localhost:3000/src/Interface/Admin/Assets/js/crud.js"></script>
     @else

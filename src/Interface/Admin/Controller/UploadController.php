@@ -12,13 +12,11 @@ class UploadController
     #[Route(path: '/admin/upload-image', method: 'POST')]
     public function uploadImage(): void
     {
-        Debugger::log('Requête reçue pour l\'upload d\'image.', Debugger::INFO);
 
         $uploadDir = STORAGE_PATH . '/uploads/';
         $uploadUrl = '/storage/uploads/';
 
         if (!is_dir($uploadDir)) {
-            Debugger::log('Création du dossier de stockage.', Debugger::INFO);
             mkdir($uploadDir, 0755, true);
         }
 
@@ -47,7 +45,6 @@ class UploadController
             return;
         }
 
-        Debugger::log('Fichier uploadé avec succès : ' . $filePath, Debugger::INFO);
 
         header('Content-Type: application/json');
         echo json_encode(['location' => $uploadUrl . $filename]);
