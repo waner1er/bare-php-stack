@@ -19,7 +19,7 @@ class MakeCrudCommand implements CommandInterface
     public function execute(?string $name, array $options = []): void
     {
         if (empty($name)) {
-            $this->output->writeln("❌ Le nom de l'entité est requis.");
+            $this->output->writeln("Erreur : Le nom de l'entité est requis.");
             $this->output->writeln("Usage: php minor make:crud <Entity>");
             return;
         }
@@ -29,7 +29,7 @@ class MakeCrudCommand implements CommandInterface
 
         // Vérifier que l'entité existe
         if (!class_exists($entityClass)) {
-            $this->output->writeln("❌ L'entité {$entityName} n'existe pas dans Domain/Entity.");
+            $this->output->writeln("Erreur : L'entité {$entityName} n'existe pas dans Domain/Entity.");
             return;
         }
 
@@ -37,7 +37,7 @@ class MakeCrudCommand implements CommandInterface
         $crudFilePath = SRC_PATH . "/Interface/Admin/Crud/{$crudClassName}.php";
 
         if (file_exists($crudFilePath)) {
-            $this->output->writeln("❌ Le CrudResource {$crudClassName} existe déjà.");
+            $this->output->writeln("Erreur : Le CrudResource {$crudClassName} existe déjà.");
             return;
         }
 
@@ -81,7 +81,7 @@ class MakeCrudCommand implements CommandInterface
         $this->output->writeln("✓ CrudResource créé avec succès : {$crudClassName}");
         $this->output->writeln("Fichier : src/Interface/Admin/Crud/{$crudClassName}.php");
         $this->output->writeln("");
-        $this->output->writeln("✨ Le CRUD est automatiquement disponible sur : /admin/crud/" . strtolower($entityName) . "s");
+        $this->output->writeln("Le CRUD est automatiquement disponible sur : /admin/crud/" . strtolower($entityName) . "s");
     }
 
     private function generateInputCode(string $propertyName, ?\ReflectionType $type): string

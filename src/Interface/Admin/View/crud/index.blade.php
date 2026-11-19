@@ -16,7 +16,7 @@
             <h2 class="admin-page__title">{{ $title }}</h2>
             @if ($mode === 'list')
                 <a href="/admin/crud/{{ $resource }}?action=create" class="admin-btn admin-btn--primary">
-                    ➕ Ajouter {{ $singularTitle }}
+                    + Ajouter {{ $singularTitle }}
                 </a>
             @else
                 <a href="/admin/crud/{{ $resource }}" class="admin-btn admin-btn--secondary">

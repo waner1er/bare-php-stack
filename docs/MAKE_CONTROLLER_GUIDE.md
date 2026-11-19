@@ -4,13 +4,13 @@
 
 La commande `make:controller` a été améliorée pour créer automatiquement des controllers utilisant les repository interfaces !
 
-### 🚀 Utilisation
+### Utilisation
 
 ```bash
 php minor make:controller Product
 ```
 
-### 📝 Workflow interactif
+### Workflow interactif
 
 La commande vous guide à travers plusieurs étapes :
 
@@ -18,7 +18,7 @@ La commande vous guide à travers plusieurs étapes :
 2. **Utilisation d'un repository** (oui/non)
 3. **Sélection du modèle** (si repository choisi)
 
-### ✨ Exemple complet
+### Exemple complet
 
 ```bash
 $ php minor make:controller Product
@@ -43,7 +43,7 @@ Votre choix : 4
 ✓ Controller ProductController créé dans Interface/FrontEnd/Controller.
 ```
 
-### 📁 Code généré
+### Code généré
 
 #### Avec Repository (Product)
 
@@ -109,15 +109,15 @@ class CustomController extends BaseController
 }
 ```
 
-### 🎯 Avantages
+### Avantages
 
-✅ **Génération automatique des routes** avec attributs PHP 8  
-✅ **Injection du repository interface** (bonne pratique)  
-✅ **Méthodes index() et show() pré-configurées**  
-✅ **Gestion d'erreur 404 incluse**  
-✅ **Nommage cohérent** des variables et routes
+- **Génération automatique des routes** avec attributs PHP 8
+- **Injection du repository interface** (bonne pratique)
+- **Méthodes index() et show() pré-configurées**
+- **Gestion d'erreur 404 incluse**
+- **Nommage cohérent** des variables et routes
 
-### 💡 Workflow complet
+### Workflow complet
 
 ```bash
 # 1. Créer le modèle avec repository
@@ -131,13 +131,13 @@ php minor make:controller Product
 php minor migrate
 
 # 4. Créer les vues Blade correspondantes
-# - resources/views/products/index.blade.php
-# - resources/views/products/show.blade.php
+# resources/views/products/index.blade.php
+# resources/views/products/show.blade.php
 
-# 5. C'est prêt ! 🎉
+# 5. C'est prêt !
 ```
 
-### 📋 Méthodes générées
+### Méthodes générées
 
 Les controllers avec repository incluent automatiquement :
 
@@ -170,7 +170,7 @@ public function show(int $id): void
 }
 ```
 
-### ➕ Ajouter des méthodes personnalisées
+### Ajouter des méthodes personnalisées
 
 Vous pouvez facilement étendre le controller :
 
@@ -242,7 +242,7 @@ public function destroy(int $id): void
 }
 ```
 
-### 🏗️ Architecture générée
+### Architecture générée
 
 ```
 src/Interface/FrontEnd/
@@ -259,13 +259,13 @@ src/Domain/Entity/
 └── Product.php  ← Modèle
 ```
 
-### 🔥 Bonnes pratiques
+### Bonnes pratiques
 
 1. **Toujours utiliser l'interface dans le type**
 
    ```php
-   private ProductRepositoryInterface $repo; // ✅
-   private ProductRepository $repo;          // ❌
+   private ProductRepositoryInterface $repo; //
+   private ProductRepository $repo;          //
    ```
 
 2. **Un controller = Un modèle principal**
@@ -288,7 +288,7 @@ src/Domain/Entity/
    }
    ```
 
-### 📚 Commandes connexes
+### Commandes connexes
 
 ```bash
 php minor make:model Product --migration     # Créer model + repository
@@ -297,7 +297,7 @@ php minor make:component ProductCard --class # Créer composant
 php minor make:seeder ProductSeeder          # Créer seeder
 ```
 
-### 🎨 Exemple de vue Blade
+### Exemple de vue Blade
 
 **products/index.blade.php**
 

@@ -98,7 +98,7 @@ function validateSlug() {
 
   // Check if slug is already in menu
   if (usedMenuSlugs.includes(slug)) {
-    errorEl.textContent = "⚠️ Ce slug est déjà dans le menu";
+    errorEl.textContent = "Ce slug est déjà dans le menu";
     errorEl.style.display = "block";
     submitBtn.disabled = true;
     return;
@@ -106,7 +106,7 @@ function validateSlug() {
 
   // Check if slug is reserved (except for post types)
   if (type !== "post" && RESERVED_SLUGS.includes(slug)) {
-    errorEl.textContent = "⚠️ Ce slug est réservé pour une page système";
+    errorEl.textContent = "Ce slug est réservé pour une page système";
     errorEl.style.display = "block";
     submitBtn.disabled = true;
     return;
@@ -115,7 +115,7 @@ function validateSlug() {
   // Warning if reserved slug but post type
   if (type === "post" && RESERVED_SLUGS.includes(slug)) {
     warningEl.textContent =
-      "⚠️ Attention : ce slug correspond à une page système, il y aura un conflit";
+      "Attention : ce slug correspond à une page système, il y aura un conflit";
     warningEl.style.display = "block";
   }
 }

@@ -4,7 +4,7 @@
 
 La commande `make:model` a été améliorée pour créer automatiquement une architecture complète incluant :
 
-### 📁 Fichiers générés
+### Fichiers générés
 
 Quand vous exécutez `php minor make:model Product`, la commande crée automatiquement :
 
@@ -26,7 +26,7 @@ Quand vous exécutez `php minor make:model Product`, la commande crée automatiq
 4. **Migration** (optionnel) : `migrations/files/YYYY_MM_DD_HHMMSS_create_products_table.php`
    - Script SQL pour créer la table en base de données
 
-### 🚀 Utilisation
+### Utilisation
 
 ```bash
 # Création basique
@@ -39,26 +39,26 @@ php minor make:model Product --migration
 php minor make:model Product
 ```
 
-### 📝 Exemple de workflow
+### Exemple de workflow
 
 ```bash
 # 1. Créer le modèle Product
 php minor make:model Product --migration
 
 # Répondre aux questions :
-# - Nom de la table : products (par défaut)
-# - Propriétés :
-#   - name (string)
-#   - description (text)
-#   - price (float)
-#   - stock (int)
-#   - category_id (int, foreign key vers categories)
+# Nom de la table : products (par défaut)
+# Propriétés :
+#   name (string)
+#   description (text)
+#   price (float)
+#   stock (int)
+#   category_id (int, foreign key vers categories)
 
 # 2. Fichiers créés :
-# ✓ src/Domain/Entity/Product.php
-# ✓ src/Domain/Repository/ProductRepositoryInterface.php
-# ✓ src/Infrastructure/Repository/ProductRepository.php
-# ✓ migrations/files/2026_01_12_HHMMSS_create_products_table.php
+# src/Domain/Entity/Product.php
+# src/Domain/Repository/ProductRepositoryInterface.php
+# src/Infrastructure/Repository/ProductRepository.php
+# migrations/files/2026_01_12_HHMMSS_create_products_table.php
 
 # 3. Exécuter la migration
 php minor migrate
@@ -66,7 +66,7 @@ php minor migrate
 # 4. Utiliser dans un controller
 ```
 
-### 💡 Exemple d'utilisation dans un Controller
+### Exemple d'utilisation dans un Controller
 
 ```php
 <?php
@@ -110,7 +110,7 @@ class ProductController extends BaseController
 }
 ```
 
-### ✅ Avantages
+### Avantages
 
 - **Architecture propre** : Séparation Domain / Infrastructure
 - **Testabilité** : Interfaces permettent le mocking
@@ -118,13 +118,13 @@ class ProductController extends BaseController
 - **Rapidité** : Tout est généré automatiquement
 - **Cohérence** : Tous les models suivent le même pattern
 
-### 🎯 Bonnes pratiques
+### Bonnes pratiques
 
 1. **Toujours utiliser l'interface dans les controllers**
 
    ```php
-   private ProductRepositoryInterface $productRepository; // ✅ Bon
-   private ProductRepository $productRepository;          // ❌ Éviter
+   private ProductRepositoryInterface $productRepository; //  Bon
+   private ProductRepository $productRepository;          //  Éviter
    ```
 
 2. **Ajouter des méthodes personnalisées au besoin**
@@ -147,7 +147,7 @@ class ProductController extends BaseController
    php minor migrate
    ```
 
-### 📚 Autres commandes disponibles
+### Autres commandes disponibles
 
 ```bash
 php minor make:controller ProductController  # Créer un controller

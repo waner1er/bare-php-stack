@@ -210,7 +210,7 @@ PHP;
             $this->createMigration($className, $tableName, $properties, $foreignKeys);
         }
 
-        echo "\n✅ Génération terminée avec succès !\n";
+        echo "\n✓ Génération terminée avec succès !\n";
         echo "  - Entity: src/Domain/Entity/{$className}.php\n";
         echo "  - Repository Interface: src/Domain/Repository/{$className}RepositoryInterface.php\n";
         echo "  - Repository Implementation: src/Infrastructure/Repository/{$className}Repository.php\n";

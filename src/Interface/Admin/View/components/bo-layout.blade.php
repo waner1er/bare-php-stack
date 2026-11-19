@@ -13,38 +13,32 @@
 <body class="admin-layout">
     <aside class="admin-sidebar">
         <div class="admin-sidebar__header">
-            <h1 class="admin-sidebar__logo">🔧 Admin Panel</h1>
+            <h1 class="admin-sidebar__logo">Admin</h1>
         </div>
 
         <nav class="admin-sidebar__nav">
             <a href="/admin"
                 class="admin-sidebar__link {{ $_SERVER['REQUEST_URI'] === '/admin' ? 'admin-sidebar__link--active' : '' }}">
-                <span class="admin-sidebar__icon">📊</span>
                 <span class="admin-sidebar__text">Dashboard</span>
             </a>
             <a href="/admin/crud/posts"
                 class="admin-sidebar__link {{ str_contains($_SERVER['REQUEST_URI'], '/admin/crud/posts') ? 'admin-sidebar__link--active' : '' }}">
-                <span class="admin-sidebar__icon">📋</span>
                 <span class="admin-sidebar__text">Posts</span>
             </a>
             <a href="/admin/menu"
                 class="admin-sidebar__link {{ str_contains($_SERVER['REQUEST_URI'], '/admin/menu') ? 'admin-sidebar__link--active' : '' }}">
-                <span class="admin-sidebar__icon">🗂️</span>
                 <span class="admin-sidebar__text">Menu</span>
             </a>
             <a href="/admin/users" class="admin-sidebar__link">
-                <span class="admin-sidebar__icon">👥</span>
                 <span class="admin-sidebar__text">Utilisateurs</span>
             </a>
         </nav>
 
         <div class="admin-sidebar__footer">
             <a href="/" class="admin-sidebar__link admin-sidebar__link--secondary">
-                <span class="admin-sidebar__icon">🌐</span>
                 <span class="admin-sidebar__text">Voir le site</span>
             </a>
             <a href="/logout" class="admin-sidebar__link admin-sidebar__link--danger">
-                <span class="admin-sidebar__icon">🚪</span>
                 <span class="admin-sidebar__text">Déconnexion</span>
             </a>
         </div>

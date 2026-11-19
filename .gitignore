@@ -8,3 +8,7 @@ composer.lock
 
 /migrations/files/*.php
 !/migrations/files/.gitkeep
+/node_modules/
+.php-cs-fixer.cache
+/storage/uploads/*
+!/storage/uploads/.gitkeep

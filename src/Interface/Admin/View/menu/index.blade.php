@@ -159,7 +159,7 @@
                                         onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit"
-                                            class="admin-btn admin-btn--small admin-btn--danger">🗑️</button>
+                                            class="admin-btn admin-btn--small admin-btn--danger">Supprimer</button>
                                     </form>
                                 </td>
                             </tr>

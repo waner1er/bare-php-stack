@@ -2,7 +2,7 @@
 
 > Stack PHP moderne avec architecture DDD, routing par attributs, et CLI de développement
 
-## 📋 Table des matières
+## Table des matières
 
 - [Présentation](#présentation)
 - [Stack Technique](#stack-technique)
@@ -18,22 +18,22 @@
 
 ---
 
-## 🎯 Présentation
+## Présentation
 
 Bare PHP Stack est un framework PHP personnalisé construit selon les principes du Domain-Driven Design (DDD). Il propose :
 
-- ✅ **Routing moderne** avec attributs PHP 8+
-- ✅ **Architecture DDD** propre et maintenable
-- ✅ **CLI de développement** pour générer models, controllers, migrations
-- ✅ **Auto-découverte des controllers** (plus besoin de les enregistrer manuellement)
-- ✅ **Template engine Blade** (Laravel)
-- ✅ **Gestion des assets** avec Vite
-- ✅ **Debug avancé** avec Tracy
-- ✅ **Migrations & Seeders** pour la base de données
+- **Routing moderne** avec attributs PHP 8+
+- **Architecture DDD** propre et maintenable
+- **CLI de développement** pour générer models, controllers, migrations
+- **Auto-découverte des controllers** (plus besoin de les enregistrer manuellement)
+- **Template engine Blade** (Laravel)
+- **Gestion des assets** avec Vite
+- **Debug avancé** avec Tracy
+- **Migrations & Seeders** pour la base de données
 
 ---
 
-## 🛠 Stack Technique
+## Stack Technique
 
 ### Backend
 
@@ -57,7 +57,7 @@ Bare PHP Stack est un framework PHP personnalisé construit selon les principes 
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 ### Structure DDD
 
@@ -102,7 +102,7 @@ src/
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Prérequis
 
@@ -238,7 +238,7 @@ src/
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### Fichiers de configuration
 
@@ -260,7 +260,7 @@ src/
 
 ---
 
-## 🔧 CLI Minor
+## CLI Minor
 
 Minor est le CLI de développement du projet. Il permet de générer rapidement du code.
 
@@ -307,8 +307,8 @@ La commande `make:model` crée automatiquement :
 php minor make:model Product --migration
 
 # Répondre aux questions :
-# - Table name : products
-# - Properties : name:string, price:float, stock:int
+# Table name : products
+# Properties : name:string, price:float, stock:int
 ```
 
 ### Génération de Controllers
@@ -333,7 +333,7 @@ Le controller généré utilisera automatiquement le `ProductRepositoryInterface
 
 ---
 
-## 💻 Développement
+## Développement
 
 ### Créer une nouvelle page
 
@@ -453,7 +453,7 @@ dd($variable); // Dump and die
 
 ---
 
-## 🗄 Migration & Seeding
+## Migration & Seeding
 
 ### Migrations
 
@@ -531,7 +531,7 @@ php minor seed:run
 
 ---
 
-## 🎨 Assets Frontend
+## Assets Frontend
 
 ### Structure
 
@@ -588,7 +588,7 @@ npm run watch
 
 ---
 
-## 🐛 Debug
+## Debug
 
 ### Tracy Debugger
 
@@ -602,10 +602,10 @@ APP_DEBUG=true
 
 **Fonctionnalités :**
 
-- 🔴 **Barre de debug** en bas à droite
-- 💥 **BlueScreen** détaillé sur les erreurs
-- 📊 **Profiling** des requêtes et performances
-- 📝 **Logs** dans `storage/logs/`
+- **Barre de debug** en bas à droite
+- **BlueScreen** détaillé sur les erreurs
+- **Profiling** des requêtes et performances
+- **Logs** dans `storage/logs/`
 
 **Utilisation :**
 
@@ -625,18 +625,14 @@ dd($variable);
 
 ---
 
-## 📚 Guides détaillés
+## Guides détaillés
 
-Des guides complets sont disponibles dans le projet :
-
-- **[MAKE_MODEL_GUIDE.md](MAKE_MODEL_GUIDE.md)** : Guide complet pour créer des models
-- **[MAKE_CONTROLLER_GUIDE.md](MAKE_CONTROLLER_GUIDE.md)** : Guide complet pour créer des controllers
-- **[ENTITY_ARCHIVE_GUIDE.md](ENTITY_ARCHIVE_GUIDE.md)** : Guide pour archiver des entités
-- **[REFACTORING_SUMMARY.md](REFACTORING_SUMMARY.md)** : Historique des refactorings
+- [Générer un model](docs/MAKE_MODEL_GUIDE.md)
+- [Générer un controller](docs/MAKE_CONTROLLER_GUIDE.md)
 
 ---
 
-## 🔒 Sécurité
+## Sécurité
 
 ### CSRF Protection
 
@@ -679,36 +675,30 @@ Session::has('key');
 
 ---
 
-## 📦 Déploiement
+## Déploiement
 
 ### Checklist production
 
-1. ✅ Mettre `APP_DEBUG=false` dans `.env`
-2. ✅ Mettre `APP_ENV=production`
-3. ✅ Compiler les assets : `npm run build`
-4. ✅ Configurer les permissions :
+1. Mettre `APP_DEBUG=false` dans `.env`
+2. Mettre `APP_ENV=production`
+3. Compiler les assets : `npm run build`
+4. Configurer les permissions :
    ```bash
    chmod -R 755 storage/
    chmod -R 755 storage/logs/
    chmod -R 755 storage/cache/
    ```
-5. ✅ Optimiser l'autoload :
+5. Optimiser l'autoload :
    ```bash
    composer install --no-dev --optimize-autoloader
    ```
-6. ✅ Configurer le serveur web (voir [Installation](#installation))
+6. Configurer le serveur web (voir [Installation](#installation))
 
 ---
 
-## 🤝 Contribution
+## Contribution
 
-1. Fork le projet
-2. Créer une branche (`git checkout -b feature/AmazingFeature`)
-3. Commit les changements (`git commit -m 'Add AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
-
-**Code Style** : Utilisez PHP-CS-Fixer
+Les issues et pull requests sont les bienvenues. Le style de code suit PHP-CS-Fixer :
 
 ```bash
 vendor/bin/php-cs-fixer fix
@@ -716,39 +706,25 @@ vendor/bin/php-cs-fixer fix
 
 ---
 
-## 📝 License
+## License
 
 Ce projet est sous licence MIT.
 
 ---
 
-## 👨‍💻 Auteur
+## Auteur
 
-**Erwan** - [waner1er](mailto:riveterwan8@gmail.com)
-
----
-
-## 🆘 Support
-
-Pour toute question ou problème :
-
-1. Consulter les [guides détaillés](#guides-détaillés)
-2. Vérifier les logs dans `storage/logs/`
-3. Activer le mode debug (`APP_DEBUG=true`)
-4. Ouvrir une issue sur GitHub
+Erwan Rivet ([waner1er](https://github.com/waner1er))
 
 ---
 
-## 📈 Roadmap
+## Roadmap
 
 - [ ] API REST complète
-- [ ] Tests unitaires et d'intégration
+- [x] Tests unitaires et tests d'architecture
+- [ ] Tests d'intégration
 - [ ] Docker pour l'environnement de dev
 - [ ] CI/CD avec GitHub Actions
 - [ ] Cache système (Redis/Memcached)
 - [ ] Queue système pour tâches asynchrones
 - [ ] Internationalisation (i18n)
-
----
-
-**Bon développement ! 🚀**
